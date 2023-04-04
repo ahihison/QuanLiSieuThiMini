@@ -23,6 +23,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.ImageIcon;
 import java.awt.Color;
+import java.awt.Component;
 
 public class LoginGui extends JFrame {
 
@@ -67,17 +68,19 @@ public class LoginGui extends JFrame {
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(panel_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
-						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 479, Short.MAX_VALUE))
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 479, Short.MAX_VALUE)
 					.addGap(10))
+				.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+					.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
+					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+					.addGap(4))
 		);
 		
 		textField = new JTextField();
@@ -164,7 +167,7 @@ public class LoginGui extends JFrame {
 							.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 59, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED))
 						.addGroup(gl_panel_1.createSequentialGroup()
-							.addGap(21)
+							.addGap(21) 
 							.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
 								.addComponent(textField, GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
 								.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE))))
@@ -191,6 +194,7 @@ public class LoginGui extends JFrame {
 		lblNewLabel.setFont(new Font("Arial", Font.BOLD, 18));
 		panel.add(lblNewLabel);
 		contentPane.setLayout(gl_contentPane);
+		
 	}
 }
 
