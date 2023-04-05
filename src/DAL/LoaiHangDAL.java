@@ -28,6 +28,7 @@ public class LoaiHangDAL extends connectSql {
 				lh.setMaLH(rs.getInt(1)); 
 				lh.setTenLH(rs.getString(2));
 				arrLoaihang.add(lh);
+				
 			}
 		} catch (Exception e) {
 			// TODO: handle exception

@@ -12,9 +12,10 @@ public class connectSql {
 	
 
 	public connectSql() throws SQLException {
-		String connectionUrl = "jdbc:sqlserver://ROG-G14:1433;databaseName=QuanLySieuThi;user=sa;password=sa;encrypt=true;trustServerCertificate=true;";
+		String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=QuanLySieuThi;user=sa;password=sa;encrypt=true;trustServerCertificate=true;";
 		conn = DriverManager.getConnection(connectionUrl);
 	}
+	
 
 }
  
