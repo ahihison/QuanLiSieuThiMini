@@ -18,7 +18,7 @@ public class SanPhamDAL extends connectSql {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ArrayList<SanPham> docSanPham(String condition){
+	public ArrayList<SanPham> docSanPham(String condition,String value){
 		String sql ="";
 		ArrayList<SanPham> arrList = new ArrayList<SanPham>();
 		try {
@@ -30,6 +30,9 @@ public class SanPhamDAL extends connectSql {
 			}
 			if(condition.equals("sapxeptheogia")) {
 				 sql = "select * from SANPHAM where isDeleted = 1 order by GiaBan";
+			}
+			if(condition.equals("timkiem")) {
+				sql = "select * from SANPHAM where isDeleted = 1 and MaSP LIKE %"+value+"% ";
 			}
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			ResultSet rs = pstm.executeQuery();
@@ -70,22 +73,23 @@ public class SanPhamDAL extends connectSql {
 		 String sql = "UPDATE SANPHAM SET isDeleted = "+ 0 +" where MaSP = "+masp;
 		    try (PreparedStatement pstm = conn.prepareStatement(sql)) {
 		        int rowsUpdated = pstm.executeUpdate();
+		        
 		        return rowsUpdated > 0;
 		    }
 	}
-	public boolean themsanpham(SanPham sp,String condition) throws SQLException {
+	public boolean themsanpham(SanPham sp,String condition,String oldMaSP) throws SQLException {
 		String sql = "";
 		if(condition.equals("themsanpham")) {
-			sql =  "INSERT INTO SANPHAM (TenSp, GiaMua, GiaBan, HSD, MaLH, DonVi, img,isDeleted) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
+			sql =  "INSERT INTO SANPHAM (TenSP, GiaMua, GiaBan, HSD, MaLH, DonVi, img,isDeleted,MaSP) VALUES (?, ?, ?, ?, ?, ?, ?,?,?)";
 		}
 		if(condition.equals("suasanpham")) {
-		sql = "UPDATE SANPHAM SET  TenSp = ?, GiaMua = ?, GiaBan = ?, HSD = ?, MaLH = ?, DonVi = ?, img = ?, isDeleted = ? WHERE MaSp =?";
+		sql = "UPDATE SANPHAM SET TenSP = ?, GiaMua = ?, GiaBan = ?, HSD = ?, MaLH = ?, DonVi = ?, img = ?, isDeleted = ?,MaSP = ? WHERE MaSP = ?";
 
 		}
 		PreparedStatement pstm = conn.prepareStatement(sql);
 			
 		try {
-//			pstm.setInt(1,sp.getMaSp());
+
 			pstm.setString(1,sp.getTenSp());
 			pstm.setFloat(2, sp.getGiaMua());
 			pstm.setFloat(3, sp.getGiaBan());
@@ -95,9 +99,13 @@ public class SanPhamDAL extends connectSql {
 			pstm.setString(7,".//Image//"+sp.getImg());
 			pstm.setInt(8,1);
 			pstm.setInt(9, sp.getMaSp());
-			System.out.println(sp.getMaSp()); 
-			System.out.println(sp.getTenSp());
-			System.out.println(sp.getImg());
+			
+			if(condition.equals("suasanpham")) {
+				System.out.println(sp.getMaSp());
+				System.out.println(oldMaSP);
+				pstm.setInt(10, Integer.parseInt(oldMaSP));
+			}
+			
 			pstm.executeUpdate();
 			return true;
 		} catch (Exception e) {
