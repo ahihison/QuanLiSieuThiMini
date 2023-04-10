@@ -23,6 +23,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -35,6 +36,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollBar;
 
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -45,6 +48,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -66,6 +70,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class QuanLySanPhamGui extends JFrame {
@@ -119,7 +125,7 @@ public class QuanLySanPhamGui extends JFrame {
 	JRadioButton radio2 = new JRadioButton("Giá sản phẩm");
 	ButtonGroup btg = new ButtonGroup();
 	JScrollPane scrollPane = new JScrollPane();
-	boolean addbtn,fixbtn = false;
+	boolean addbtn, fixbtn = false;
 //	dung grap 2d tao size cho anh
 	int newWidth = 130;
 	int newHeight = 110;
@@ -128,24 +134,34 @@ public class QuanLySanPhamGui extends JFrame {
 	String patternNumber = "\\d+(\\.\\d+)?";
 	JLabel lbThongbao = new JLabel();
 	String oldMaSP = null;
+	String valueFind = null;
 	private JTextField textFieldSearch;
-boolean checkFix = false;
+	boolean checkFix = false;
+
 	public void hienthisanpham(String condition) throws SQLException {
 		SanPhamDAL spDal = new SanPhamDAL();
 		ArrayList<SanPham> arrSp = new ArrayList<SanPham>();
 		if (condition == "hien thi") {
 
-			arrSp = spDal.docSanPham("docsanpham",null);
+			arrSp = spDal.docSanPham("docsanpham", null);
 		}
 		if (condition == "sapxeptheoten") {
-			arrSp = spDal.docSanPham("sapxeptheoten",null);
+			arrSp = spDal.docSanPham("sapxeptheoten", null);
 		}
 		if (condition == "sapxeptheogia") {
-			arrSp = spDal.docSanPham("sapxeptheogia",null);
+			arrSp = spDal.docSanPham("sapxeptheogia", null);
 		}
-if (condition == "them") {
-			
-			arrSp = spDal.docSanPham("docsanpham",null);
+		if (condition == "timkiem") {
+			arrSp = spDal.docSanPham("timkiem", textFieldSearch.getText());
+			if (arrSp.isEmpty()) {
+				JOptionPane.showMessageDialog(contentPane, "Khong co san pham");
+				textFieldSearch.requestFocus();
+				return;
+			}
+		}
+		if (condition == "them") {
+
+			arrSp = spDal.docSanPham("docsanpham", null);
 			LoaiHangDAL test = new LoaiHangDAL();
 			ArrayList<LoaiHang> arrMaLH = test.docLoaiHang();
 			DefaultComboBoxModel combo = new DefaultComboBoxModel();
@@ -170,11 +186,10 @@ if (condition == "them") {
 
 			model.addRow(row);
 		}
-		
+
 		lastRow = table.getRowCount() - 1; // get index of the last row
 		lastValueMaSp = table.getValueAt(lastRow, 1); // get the value at the last row and column n
 	}
-	
 
 	public void resetValue() {
 		textFieldImg.setText("");
@@ -201,6 +216,7 @@ if (condition == "them") {
 		comboBox.setSelectedItem(null);
 
 	}
+
 	public void unSetEnable() {
 		textFieldImg.setEnabled(true);
 		textFieldMasp.setEnabled(true);
@@ -216,6 +232,7 @@ if (condition == "them") {
 		btnSua.setEnabled(false);
 		btnLuu.setEnabled(false);
 	}
+
 	public void setEnable() {
 
 		textFieldImg.setEnabled(false);
@@ -233,38 +250,37 @@ if (condition == "them") {
 
 	public Boolean checkEmtyValue() throws SQLException {
 		// regular expression pattern
-		if(textFieldMasp.getText().isEmpty()) {
+		if (textFieldMasp.getText().isEmpty()) {
 			JOptionPane.showMessageDialog(contentPane, "Mã sản phẩm trống!");
 			textFieldMasp.requestFocus();
 			return false;
 		}
-		if(!textFieldMasp.getText().isEmpty()) {
+		if (!textFieldMasp.getText().isEmpty()) {
 			SanPhamDAL spd = new SanPhamDAL();
 			ArrayList<SanPham> arrPro = new ArrayList<SanPham>();
-			arrPro = spd.docSanPham("docsanpham",null);
-			if(fixbtn) {
-				for(SanPham sp:arrPro) {
-					if(Integer.parseInt(oldMaSP)!=Integer.parseInt(textFieldMasp.getText()) && sp.getMaSp()== Integer.parseInt(textFieldMasp.getText())) {
+			arrPro = spd.docSanPham("docsanpham", null);
+			if (fixbtn) {
+				for (SanPham sp : arrPro) {
+					if (Integer.parseInt(oldMaSP) != Integer.parseInt(textFieldMasp.getText())
+							&& sp.getMaSp() == Integer.parseInt(textFieldMasp.getText())) {
 						JOptionPane.showMessageDialog(contentPane, "Mã sản phẩm đã tồn tại!");
 						textFieldMasp.requestFocus();
 						return false;
-						
+
 					}
 				}
 			}
-			if(addbtn) {
-				for(SanPham sp:arrPro) {
-					if(sp.getMaSp()== Integer.parseInt(textFieldMasp.getText())) {
+			if (addbtn) {
+				for (SanPham sp : arrPro) {
+					if (sp.getMaSp() == Integer.parseInt(textFieldMasp.getText())) {
 						JOptionPane.showMessageDialog(contentPane, "Mã sản phẩm đã tồn tại!");
 						textFieldMasp.requestFocus();
 						return false;
-						
+
 					}
 				}
 			}
-			
-			
-			
+
 		}
 		if (selectedFile == null && textFieldImg.getText().isEmpty()) {
 			JOptionPane.showMessageDialog(contentPane, "Chưa chọn ảnh cho sản phẩm");
@@ -277,7 +293,8 @@ if (condition == "them") {
 
 		}
 		if (!textFieldGiaban.getText().isEmpty()) {
-			isNumber = textFieldGiaban.getText().matches(patternNumber);
+			  String input = textFieldGiaban.getText().replaceAll(",", "");
+			isNumber = input.matches(patternNumber);
 			if (!isNumber) {
 				JOptionPane.showMessageDialog(contentPane, "Giá trị phải là số");
 				textFieldGiaban.requestFocus();
@@ -292,7 +309,8 @@ if (condition == "them") {
 
 		}
 		if (!textFieldGianhap.getText().isEmpty()) {
-			isNumber = textFieldGianhap.getText().matches(patternNumber);
+			  String input = textFieldGianhap.getText().replaceAll(",", "");
+			isNumber = input.matches(patternNumber);
 			if (!isNumber) {
 				JOptionPane.showMessageDialog(contentPane, "Giá trị phải là số");
 				textFieldGianhap.requestFocus();
@@ -403,6 +421,29 @@ if (condition == "them") {
 		textFieldGianhap.setEnabled(false);
 		textFieldGianhap.setColumns(10);
 
+		textFieldGianhap.addKeyListener(new KeyAdapter() {
+			  public void keyReleased(KeyEvent e) {
+			        formatInput();
+			    }
+
+
+		    private void formatInput() {
+		        String input = textFieldGianhap.getText().replaceAll(",", "");
+		        if (input.isEmpty()) {
+		            return;
+		        }
+		        try {
+		            int number = Integer.parseInt(input);
+		            NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
+		            String formattedNumber = numberFormat.format(number);
+		            textFieldGianhap.setText(formattedNumber);
+		        } catch (NumberFormatException ex) {
+		            // Ignore invalid input
+		        }
+		    }
+		});
+		
+
 		JLabel lblNewLabel_6 = new JLabel("Loại sản phẩm");
 		lblNewLabel_6.setBounds(173, 45, 97, 26);
 
@@ -428,7 +469,27 @@ if (condition == "them") {
 		textFieldGiaban.setBounds(914, 44, 138, 29);
 		textFieldGiaban.setEnabled(false);
 		textFieldGiaban.setColumns(10);
+		textFieldGiaban.addKeyListener(new KeyAdapter() {
+			  public void keyReleased(KeyEvent e) {
+			        formatInput();
+			    }
 
+
+		    private void formatInput() {
+		        String input = textFieldGiaban.getText().replaceAll(",", "");
+		        if (input.isEmpty()) {
+		            return;
+		        }
+		        try {
+		            int number = Integer.parseInt(input);
+		            NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
+		            String formattedNumber = numberFormat.format(number);
+		            textFieldGiaban.setText(formattedNumber);
+		        } catch (NumberFormatException ex) {
+		            // Ignore invalid input
+		        }
+		    }
+		});
 		textFieldDonvi = new JTextField();
 		textFieldDonvi.setBounds(506, 45, 110, 28);
 		textFieldDonvi.setEnabled(false);
@@ -441,7 +502,7 @@ if (condition == "them") {
 		btnLuu.setEnabled(false);
 		btnLuu.setFocusPainted(false);
 		btnLuu.setIcon(new ImageIcon(
-		Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Save.png"))));
+				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Save.png"))));
 		btnLuu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -451,7 +512,8 @@ if (condition == "them") {
 							Path sourcePath = selectedFile.toPath();
 							Path projectPath = Paths.get(System.getProperty("user.dir")); // get the path to the project
 																							// directory
-							Path imageDirectory = projectPath.resolve("src//GUI//Image"); // resolve the path to the Image
+							Path imageDirectory = projectPath.resolve("src//GUI//Image"); // resolve the path to the
+																							// Image
 
 							try {
 								Files.createDirectories(imageDirectory);
@@ -468,22 +530,24 @@ if (condition == "them") {
 								e1.printStackTrace();
 							}
 						}
-					
+
 						SanPham sp = new SanPham();
 						SanPhamDAL luusp;
-						if(addbtn) {
+						if (addbtn) {
 							try {
 								luusp = new SanPhamDAL();
 								int malh = luusp.layMaLoaiSP((String) (comboBox.getSelectedItem()));
 								sp.setMaLh(malh);
 								sp.setMaSp(Integer.parseInt(textFieldMasp.getText()));
 								sp.setDonVi(textFieldDonvi.getText());
-								sp.setGiaBan(Float.parseFloat(textFieldGiaban.getText()));
-								sp.setGiaMua(Float.parseFloat(textFieldGianhap.getText()));
+								String inputBan = textFieldGiaban.getText().replaceAll(",", "");
+								sp.setGiaBan(Float.parseFloat(inputBan));
+								String inputNhap = textFieldGianhap.getText().replaceAll(",", "");
+								sp.setGiaMua(Float.parseFloat(inputNhap));
 								sp.setHanSuDung(textFieldHansd.getText());
 								sp.setTenSp(textFieldTensp.getText());
 								sp.setImg(selectedFile.getName());
-								boolean checkAddPro = luusp.themsanpham(sp,"themsanpham",null);
+								boolean checkAddPro = luusp.themsanpham(sp, "themsanpham", null);
 								if (checkAddPro) {
 									JOptionPane.showMessageDialog(contentPane, "Thêm thành công");
 									resetValue();
@@ -498,16 +562,15 @@ if (condition == "them") {
 								e2.printStackTrace();
 							}
 						}
-						if(fixbtn) {
-							
+						if (fixbtn) {
+
 							try {
-								if(selectedFile==null) {
+								if (selectedFile == null) {
 									File file = new File(textFieldImg.getText());
 									String fileName = file.getName();
 
 									sp.setImg(fileName);
-								}
-								else {
+								} else {
 									sp.setImg(selectedFile.getName());
 								}
 								luusp = new SanPhamDAL();
@@ -515,12 +578,14 @@ if (condition == "them") {
 								sp.setMaLh(malh);
 								sp.setMaSp(Integer.parseInt(textFieldMasp.getText()));
 								sp.setDonVi(textFieldDonvi.getText());
-								sp.setGiaBan(Float.parseFloat(textFieldGiaban.getText()));
-								sp.setGiaMua(Float.parseFloat(textFieldGianhap.getText()));
+								String inputBan = textFieldGiaban.getText().replaceAll(",", "");
+								sp.setGiaBan(Float.parseFloat(inputBan));
+								String inputNhap = textFieldGianhap.getText().replaceAll(",", "");
+								sp.setGiaMua(Float.parseFloat(inputNhap));
 								sp.setHanSuDung(textFieldHansd.getText());
 								sp.setTenSp(textFieldTensp.getText());
-								
-								boolean checkAddPro = luusp.themsanpham(sp,"suasanpham",oldMaSP);
+
+								boolean checkAddPro = luusp.themsanpham(sp, "suasanpham", oldMaSP);
 								if (checkAddPro) {
 									JOptionPane.showMessageDialog(contentPane, "Sửa thành công");
 									resetValue();
@@ -535,7 +600,7 @@ if (condition == "them") {
 								e2.printStackTrace();
 							}
 						}
-						
+
 					}
 				} catch (NumberFormatException | HeadlessException | SQLException e1) {
 					// TODO Auto-generated catch block
@@ -581,7 +646,7 @@ if (condition == "them") {
 				unSetEnable();
 				btnThem.setEnabled(false);
 				btnLuu.setEnabled(true);
-				
+
 				try {
 					hienthisanpham("them");
 				} catch (SQLException e1) {
@@ -626,8 +691,8 @@ if (condition == "them") {
 
 		JButton btnDongBo = new JButton("");
 		btnDongBo.setBounds(563, 10, 104, 53);
-		btnDongBo.setIcon(new ImageIcon(
-				Toolkit.getDefaultToolkit().createImage(QuanLySanPhamGui.class.getResource(".\\Image\\Refresh-icon.png"))));
+		btnDongBo.setIcon(new ImageIcon(Toolkit.getDefaultToolkit()
+				.createImage(QuanLySanPhamGui.class.getResource(".\\Image\\Refresh-icon.png"))));
 		btnDongBo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -647,7 +712,6 @@ if (condition == "them") {
 				SanPhamDAL spd;
 				if (radio1.isSelected()) {
 
-					
 					try {
 						spd = new SanPhamDAL();
 
@@ -660,7 +724,6 @@ if (condition == "them") {
 				}
 				if (radio2.isSelected()) {
 
-					
 					try {
 						spd = new SanPhamDAL();
 
@@ -710,7 +773,7 @@ if (condition == "them") {
 		table.setFocusable(false);
 		table.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				
+
 				int row = table.getSelectedRow(); // get the selected row
 				String maLh = table.getModel().getValueAt(row, 0).toString();
 				String maSP = table.getModel().getValueAt(row, 1).toString(); // get the value of the first column
@@ -726,7 +789,7 @@ if (condition == "them") {
 				textFieldGianhap.setText(giaMua);
 				textFieldGiaban.setText(giaBan);
 				textFieldDonvi.setText(donVi);
-				
+
 				setEnable();
 				btnXoa.setEnabled(true);
 				btnSua.setEnabled(true);
@@ -737,38 +800,36 @@ if (condition == "them") {
 				Image image = null;
 				Object value = table.getModel().getValueAt(row, 7);
 				if (value != null) {
-				    img = value.toString();
+					img = value.toString();
 				}
 				if (img == null || img.isEmpty()) {
-				    // If the image path is null or empty, use a default image instead
-					
-				     icon = new ImageIcon(
-				     Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//default.png")));
-				     image = icon.getImage();
-				     Image resizedImg = image.getScaledInstance(130, 130, Image.SCALE_SMOOTH);
-				     ImageIcon resizedIcon = new ImageIcon(resizedImg);
-				     lbThemanh.setIcon(resizedIcon);
-				   
-				} else {
-				    try {
-				    	
-				         icon = new ImageIcon(
-				        Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(img)));
-				        image = icon.getImage();
-				        textFieldImg.setText(img);
-				        g.drawImage(image, 0, 0, newWidth, newHeight, null);
-						 ImageIcon resizedIcon = new ImageIcon(resizedImage);
-						 lbThemanh.setIcon(resizedIcon);
-				       
-				    } catch (Exception e1) {
-				        e1.printStackTrace();
+					// If the image path is null or empty, use a default image instead
 
-				    }
+					icon = new ImageIcon(Toolkit.getDefaultToolkit()
+							.createImage(LoginGui.class.getResource(".//Image//default.png")));
+					image = icon.getImage();
+					Image resizedImg = image.getScaledInstance(130, 130, Image.SCALE_SMOOTH);
+					ImageIcon resizedIcon = new ImageIcon(resizedImg);
+					lbThemanh.setIcon(resizedIcon);
+
+				} else {
+					try {
+
+						icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(img)));
+						image = icon.getImage();
+						textFieldImg.setText(img);
+						g.drawImage(image, 0, 0, newWidth, newHeight, null);
+						ImageIcon resizedIcon = new ImageIcon(resizedImage);
+						lbThemanh.setIcon(resizedIcon);
+
+					} catch (Exception e1) {
+						e1.printStackTrace();
+
+					}
 				}
-			   
-				
+
 //				g.dispose();
-				
+
 				LoaiHangDAL test;
 				try {
 					test = new LoaiHangDAL();
@@ -799,11 +860,11 @@ if (condition == "them") {
 		panel_6.add(btnXoa);
 		panel_6.add(btnDongBo);
 		panel_6.add(panel_7);
-		  icon = new ImageIcon(
-				     Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource("/GUI/Image/Background.png")));
-				     Image image_bg = icon.getImage();
-				     Image resizedImg_bg = image_bg.getScaledInstance(1300, 130, Image.SCALE_SMOOTH);
-				     ImageIcon resizedIcon_bg = new ImageIcon(resizedImg_bg);
+		icon = new ImageIcon(
+				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource("/GUI/Image/Background.png")));
+		Image image_bg = icon.getImage();
+		Image resizedImg_bg = image_bg.getScaledInstance(1300, 130, Image.SCALE_SMOOTH);
+		ImageIcon resizedIcon_bg = new ImageIcon(resizedImg_bg);
 		panel_2.setLayout(null);
 		panel_5.setLayout(null);
 		lbThemanh.setBounds(10, 0, 139, 123);
@@ -825,33 +886,40 @@ if (condition == "them") {
 		panel_5.add(textFieldHansd);
 		panel_5.add(textFieldGiaban);
 		panel_2.add(panel_5);
-		
+
 		textFieldSearch = new JTextField();
 		textFieldSearch.setBounds(710, 83, 341, 28);
 		panel_5.add(textFieldSearch);
 		textFieldSearch.setColumns(10);
-		
+
 		JButton btnTimKiem = new JButton("Tìm Kiếm");
 		btnTimKiem.setFocusPainted(false);
 		btnTimKiem.setHorizontalAlignment(SwingConstants.LEADING);
 		btnTimKiem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(textFieldSearch.getText().isEmpty()) {
+				if (textFieldSearch.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(contentPane, "Chưa nhập nội dung tìm kiếm!");
 					textFieldSearch.requestFocus();
+				} else {
+
+					try {
+						hienthisanpham("timkiem");
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
-				else {
-					
-				}
+
 			}
+
 		});
 		ImageIcon iconSearch = new ImageIcon(
-			     Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Find.png")));
-			     Image imageSearch = iconSearch.getImage();
-			     Image resizedImgSearch = imageSearch.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-			     ImageIcon resizedIconSearch = new ImageIcon(resizedImgSearch);
+				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Find.png")));
+		Image imageSearch = iconSearch.getImage();
+		Image resizedImgSearch = imageSearch.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		ImageIcon resizedIconSearch = new ImageIcon(resizedImgSearch);
 		btnTimKiem.setIcon(resizedIconSearch);
-	
+
 		btnTimKiem.setBounds(582, 83, 123, 26);
 		panel_5.add(btnTimKiem);
 		panel_2.add(panel_6);
@@ -883,22 +951,21 @@ if (condition == "them") {
 		JLabel lbIconShop = new JLabel("");
 		lbIconShop.setBounds(10, 0, 170, 65);
 		lblNewLabel.setFont(new Font("Arial", Font.BOLD, 24));
-		icon = new ImageIcon(
-	     Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//shop.png")));
-	     Image image = icon.getImage();
-	     Image resizedImg = image.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-	     ImageIcon resizedIcon = new ImageIcon(resizedImg);
-	     panel.setLayout(null);
-	     lbIconShop.setIcon(resizedIcon);
+		icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//shop.png")));
+		Image image = icon.getImage();
+		Image resizedImg = image.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+		ImageIcon resizedIcon = new ImageIcon(resizedImg);
+		panel.setLayout(null);
+		lbIconShop.setIcon(resizedIcon);
 		panel.add(lbIconShop);
 		panel.add(lblNewLabel);
-		
+
 		JLabel lblNewLabel_10 = new JLabel("");
 		icon = new ImageIcon(
-			     Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Background2.png")));
-			     Image image2 = icon.getImage();
-			     Image resizedImg2 = image2.getScaledInstance(1300, 100, Image.SCALE_SMOOTH);
-			     ImageIcon resizedIcon2 = new ImageIcon(resizedImg2);
+				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Background2.png")));
+		Image image2 = icon.getImage();
+		Image resizedImg2 = image2.getScaledInstance(1300, 100, Image.SCALE_SMOOTH);
+		ImageIcon resizedIcon2 = new ImageIcon(resizedImg2);
 		lblNewLabel_10.setIcon(resizedIcon2);
 		lblNewLabel_10.setBounds(0, 0, 1078, 104);
 		panel.add(lblNewLabel_10);
