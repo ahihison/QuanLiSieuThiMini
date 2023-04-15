@@ -1,4 +1,13 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
 package GUI;
+
+/**
+ *
+ * @author TruongHo
+ */
 public class HoaDon extends javax.swing.JFrame {
 
     /**

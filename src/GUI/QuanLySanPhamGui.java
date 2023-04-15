@@ -250,6 +250,7 @@ public class QuanLySanPhamGui extends JFrame {
 	}
 
 	public void hienThiMaSanPham() throws SQLException {
+		
 		LoaiHangDAL lhDal = new LoaiHangDAL();
 		ArrayList<LoaiHang> arrLH = new ArrayList<LoaiHang>();
 		String[] columnNames = { "Mã Loại Hàng","Tên Loại Hàng" };
@@ -258,14 +259,15 @@ public class QuanLySanPhamGui extends JFrame {
 		model.setRowCount(0);
 		arrLH = lhDal.docLoaiHang();
 		for (LoaiHang spdata : arrLH) {
+		
 			Object[] row = new Object[] { spdata.getMaLH(),spdata.getTenLH()};
 			model.addRow(row);
 		}
 		JTableHeader header = table_1.getTableHeader();
 		Font headerFont = header.getFont(); // get the current font of the header
 		header.setFont(new Font(headerFont.getName(), Font.BOLD, 14)); // set the new font for the header with size 16
-//		lastRow = table_1.getRowCount() - 1; // get index of the last row
-//		lastValueMaLh = table_1.getValueAt(lastRow, 0); // get the value at the last row and column n
+		lastRow = table_1.getRowCount() - 1; // get index of the last row
+		lastValueMaLh = table_1.getValueAt(lastRow, 0); // get the value at the last row and column n
 		
 	}
 	public void hienThiNhaCungCap() throws SQLException {
@@ -1181,7 +1183,7 @@ public class QuanLySanPhamGui extends JFrame {
 		panel_2.add(panel_5);
 
 		textFieldSearch = new JTextField();
-		textFieldSearch.setBounds(336, 83, 341, 28);
+		textFieldSearch.setBounds(290, 81, 341, 32);
 		panel_5.add(textFieldSearch);
 		textFieldSearch.setColumns(10);
 
@@ -1215,11 +1217,228 @@ public class QuanLySanPhamGui extends JFrame {
 		ImageIcon resizedIconSearch = new ImageIcon(resizedImgSearch);
 		btnTimKiem.setIcon(resizedIconSearch);
 
-		btnTimKiem.setBounds(179, 75, 123, 42);
+		btnTimKiem.setBounds(158, 81, 123, 34);
 		panel_5.add(btnTimKiem);
 		panel_2.add(panel_6);
 		panel_2.add(panel_8);
 				header.setPreferredSize(new Dimension(header.getWidth(), 30));
+		
+				JPanel panel_3 = new JPanel();
+				tabbedPane.addTab("Thông Tin Loại Hàng", null, panel_3, null);
+				panel_3.setLayout(null);
+				
+	
+				textMaSP1 = new JTextField();
+				textMaSP1.setHorizontalAlignment(SwingConstants.CENTER);
+				textMaSP1.setFont(new Font("Arial", Font.BOLD, 14));
+				textMaSP1.setEnabled(false);
+				textMaSP1.setBounds(283, 10, 143, 30);
+				panel_3.add(textMaSP1);
+				textMaSP1.setColumns(10);
+				
+				JLabel lblNewLabel_2 = new JLabel("Mã Sản Phẩm");
+				lblNewLabel_2.setFont(new Font("Arial", Font.BOLD, 15));
+				lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
+				lblNewLabel_2.setBounds(140, 10, 133, 30);
+				panel_3.add(lblNewLabel_2);
+				
+				textTenSp = new JTextField();
+				textTenSp.setFont(new Font("Arial", Font.BOLD, 14));
+				textTenSp.setEnabled(false);
+				textTenSp.setBounds(686, 10, 165, 30);
+				panel_3.add(textTenSp);
+				textTenSp.setColumns(10);
+				
+				JLabel lblNewLabel_5 = new JLabel("Tên Loại Hàng");
+				lblNewLabel_5.setFont(new Font("Arial", Font.BOLD, 15));
+				lblNewLabel_5.setHorizontalAlignment(SwingConstants.CENTER);
+				lblNewLabel_5.setBounds(551, 10, 125, 30);
+				panel_3.add(lblNewLabel_5);
+				btnThem_1.setFont(new Font("Arial", Font.BOLD, 14));
+				btnThem_1.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						resetValue();
+						textTenSp.setEnabled(true);
+						btnLuu_1.setEnabled(true);
+						try {
+							LoaiHangDAL LHD = new LoaiHangDAL();
+							int maLh =LHD.getLastMaLH();
+									maLh++;
+							textMaSP1.setText("" + maLh);
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
+						
+						textMaSP1.setEnabled(false);
+						addbtn = true;
+						fixbtn = false;
+						
+					}
+				});
+				
+				
+				btnThem_1.setIcon(new ImageIcon(
+						Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Add.png"))));
+				
+				btnThem_1.setFocusPainted(false);
+				btnThem_1.setBounds(169, 75, 143, 53);
+				panel_3.add(btnThem_1);
+				btnSua_1.setFont(new Font("Arial", Font.BOLD, 14));
+				btnSua_1.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						btnThem_1.setEnabled(false);
+						btnLuu_1.setEnabled(true);
+						btnXoa_1.setEnabled(false);
+						textTenSp.setEnabled(true);
+						try {
+							hienThiMaSanPham();
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						oldTenMaLH = textTenSp.getText();
+						fixbtn = true;
+						addbtn = false;
+					
+					}
+				});
+				
+				
+				btnSua_1.setIcon(new ImageIcon(
+						Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Change.png"))));
+				btnSua_1.setFocusPainted(false);
+				btnSua_1.setEnabled(false);
+				btnSua_1.setBounds(366, 75, 133, 53);
+				panel_3.add(btnSua_1);
+				btnXoa_1.setFont(new Font("Arial", Font.BOLD, 14));
+				btnXoa_1.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						try {
+							
+							LoaiHang LH = new LoaiHang();
+							LH.setMaLH(Integer.parseInt(textMaSP1.getText()));
+							LoaiHangDAL LHD = new LoaiHangDAL();
+							int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn xóa loại hàng này", "Confirmation",
+									JOptionPane.YES_NO_OPTION);
+							if (confirmed == JOptionPane.YES_OPTION) {
+								if(LHD.ThemLoaiHang(LH, "xoaloaihang")) {
+									
+									JOptionPane.showMessageDialog(contentPane, "Xóa Loại Hàng Thành Công!");
+									resetValue();
+									hienThiMaSanPham();
+									btnXoa_1.setEnabled(false);
+									btnThem_1.setEnabled(true);
+								}
+							}
+							
+							
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
+					}
+				});
+				
+				
+				btnXoa_1.setIcon(new ImageIcon(
+						Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Delete.png"))));
+				btnXoa_1.setFocusPainted(false);
+				btnXoa_1.setEnabled(false);
+				btnXoa_1.setBounds(572, 75, 133, 53);
+				panel_3.add(btnXoa_1);
+				btnLuu_1.setFont(new Font("Arial", Font.BOLD, 14));
+				btnLuu_1.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						try {
+							if(checkEmtyValueTabbed2()) {
+								LoaiHang LH = new LoaiHang();
+								LH.setMaLH(Integer.parseInt(textMaSP1.getText()));
+								LH.setTenLH(textTenSp.getText());
+								LoaiHangDAL LHD;
+								if(addbtn) {
+									try {
+										LHD = new LoaiHangDAL();
+										if(LHD.ThemLoaiHang(LH, "themloaihang")) {
+											JOptionPane.showMessageDialog(contentPane, "Thêm Thành công!");
+											resetValue();
+											hienThiMaSanPham();
+											addbtn = false;
+										}
+									} catch (SQLException e1) {
+										JOptionPane.showMessageDialog(contentPane, "Thêm Thất bại!");
+									}
+								}
+								if(fixbtn) {
+									try {
+										LHD = new LoaiHangDAL();
+										if(LHD.ThemLoaiHang(LH, "sualoaihang")) {
+											JOptionPane.showMessageDialog(contentPane, "Sửa Thành công!");
+											resetValue();
+											btnThem_1.setEnabled(true);
+											hienThiMaSanPham();
+											fixbtn = false;
+										}
+									} catch (SQLException e1) {
+										JOptionPane.showMessageDialog(contentPane, "Sửa Thất bại!");
+									}
+								}
+								
+							}
+						} catch (NumberFormatException | HeadlessException | SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+				});
+				
+				
+				btnLuu_1.setIcon(new ImageIcon(
+						Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Save.png"))));
+				btnLuu_1.setFocusPainted(false);
+				btnLuu_1.setEnabled(false);
+				btnLuu_1.setBounds(793, 75, 133, 53);
+				panel_3.add(btnLuu_1);
+				
+				JPanel panel_9 = new JPanel();
+				panel_9.setBounds(0, 138, 1077, 314);
+				panel_3.add(panel_9);
+				
+				JScrollPane scrollPane_1 = new JScrollPane();
+				scrollPane_1.setBounds(133, 63, 792, 177);
+				
+				JLabel lblLoiHngSiu = new JLabel();
+				lblLoiHngSiu.setBounds(209, 10, 604, 47);
+				lblLoiHngSiu.setText("LOẠI HÀNG SIÊU THỊ");
+				lblLoiHngSiu.setHorizontalAlignment(SwingConstants.CENTER);
+				lblLoiHngSiu.setForeground(new Color(255, 128, 128));
+				lblLoiHngSiu.setFont(new Font("Arial", Font.BOLD, 20));
+				table_1.setDefaultEditor(Object.class, null);
+				JTableHeader header1 = table_1.getTableHeader();
+				scrollPane_1.setViewportView(table_1);
+				table_1.setRowHeight(30);
+				table_1.setFocusable(false);
+				panel_9.setLayout(null);
+				panel_9.add(lblLoiHngSiu);
+				panel_9.add(scrollPane_1);
+				table_1.addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent e) {
+						int row = table_1.getSelectedRow(); // get the selected row
+						String maLh = table_1.getModel().getValueAt(row, 0).toString();
+						String tenLh = table_1.getModel().getValueAt(row, 1).toString(); // get the value of the first column
+						
+						textMaSP1.setText(maLh);
+						textTenSp.setText(tenLh);
+
+						setEnable();
+						btnXoa_1.setEnabled(true);
+						btnSua_1.setEnabled(true);
+						btnThem_1.setEnabled(true);
+						btnLuu_1.setEnabled(false);
+						
+					}});
 		
 		JPanel panel_4 = new JPanel();
 		tabbedPane.addTab("Thông Tin Nhà Cung Cấp", null, panel_4, null);
@@ -1496,256 +1715,40 @@ public class QuanLySanPhamGui extends JFrame {
 		gl_panel_1.setVerticalGroup(gl_panel_1.createParallelGroup(Alignment.LEADING).addGap(0, 522, Short.MAX_VALUE));
 
 		panel_1.setLayout(gl_panel_1);
+		lblNewLabel.setBounds(142, 20, 664, 63);
 
 		
 		lblNewLabel.setForeground(new Color(255, 255, 255));
-		lblNewLabel.setBounds(190, 10, 664, 63);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
 		JLabel lbIconShop = new JLabel("");
+		lbIconShop.setBounds(837, 18, 170, 65);
 		lbIconShop.setHorizontalAlignment(SwingConstants.RIGHT);
-		lbIconShop.setBounds(908, 8, 170, 65);
 		lblNewLabel.setFont(new Font("Arial", Font.BOLD, 24));
 		icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//shop.png")));
 		Image image = icon.getImage();
 		Image resizedImg = image.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
 		ImageIcon resizedIcon = new ImageIcon(resizedImg);
-		panel.setLayout(null);
 		lbIconShop.setIcon(resizedIcon);
-		panel.add(lbIconShop);
-		panel.add(lblNewLabel);
 
 		JLabel lblNewLabel_10 = new JLabel("");
+		lblNewLabel_10.setBounds(0, 0, 1088, 104);
 		icon = new ImageIcon(
 				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Background2.png")));
 		Image image2 = icon.getImage();
 		Image resizedImg2 = image2.getScaledInstance(1300, 100, Image.SCALE_SMOOTH);
 		ImageIcon resizedIcon2 = new ImageIcon(resizedImg2);
 		lblNewLabel_10.setIcon(resizedIcon2);
-		lblNewLabel_10.setBounds(0, 0, 1078, 104);
-		panel.add(lblNewLabel_10);
 		contentPane.setLayout(null);
 		contentPane.add(tabbedPane);
-		
-				JPanel panel_3 = new JPanel();
-				tabbedPane.addTab("Thông Tin Loại Hàng", null, panel_3, null);
-				panel_3.setLayout(null);
-				
-	
-				textMaSP1 = new JTextField();
-				textMaSP1.setHorizontalAlignment(SwingConstants.CENTER);
-				textMaSP1.setFont(new Font("Arial", Font.BOLD, 14));
-				textMaSP1.setEnabled(false);
-				textMaSP1.setBounds(283, 10, 143, 30);
-				panel_3.add(textMaSP1);
-				textMaSP1.setColumns(10);
-				
-				JLabel lblNewLabel_2 = new JLabel("Mã Sản Phẩm");
-				lblNewLabel_2.setFont(new Font("Arial", Font.BOLD, 15));
-				lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-				lblNewLabel_2.setBounds(140, 10, 133, 30);
-				panel_3.add(lblNewLabel_2);
-				
-				textTenSp = new JTextField();
-				textTenSp.setFont(new Font("Arial", Font.BOLD, 14));
-				textTenSp.setEnabled(false);
-				textTenSp.setBounds(686, 10, 165, 30);
-				panel_3.add(textTenSp);
-				textTenSp.setColumns(10);
-				
-				JLabel lblNewLabel_5 = new JLabel("Tên Loại Hàng");
-				lblNewLabel_5.setFont(new Font("Arial", Font.BOLD, 15));
-				lblNewLabel_5.setHorizontalAlignment(SwingConstants.CENTER);
-				lblNewLabel_5.setBounds(551, 10, 125, 30);
-				panel_3.add(lblNewLabel_5);
-				btnThem_1.setFont(new Font("Arial", Font.BOLD, 14));
-				btnThem_1.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						resetValue();
-						textTenSp.setEnabled(true);
-						btnLuu_1.setEnabled(true);
-						try {
-							LoaiHangDAL LHD = new LoaiHangDAL();
-							int maLh =LHD.getLastMaLH();
-									maLh++;
-							textMaSP1.setText("" + maLh);
-						} catch (SQLException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						
-						
-						textMaSP1.setEnabled(false);
-						addbtn = true;
-						fixbtn = false;
-						
-					}
-				});
-				
-				
-				btnThem_1.setIcon(new ImageIcon(
-						Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Add.png"))));
-				
-				btnThem_1.setFocusPainted(false);
-				btnThem_1.setBounds(169, 75, 143, 53);
-				panel_3.add(btnThem_1);
-				btnSua_1.setFont(new Font("Arial", Font.BOLD, 14));
-				btnSua_1.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						btnThem_1.setEnabled(false);
-						btnLuu_1.setEnabled(true);
-						btnXoa_1.setEnabled(false);
-						textTenSp.setEnabled(true);
-						try {
-							hienThiMaSanPham();
-						} catch (SQLException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						oldTenMaLH = textTenSp.getText();
-						fixbtn = true;
-						addbtn = false;
-					
-					}
-				});
-				
-				
-				btnSua_1.setIcon(new ImageIcon(
-						Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Change.png"))));
-				btnSua_1.setFocusPainted(false);
-				btnSua_1.setEnabled(false);
-				btnSua_1.setBounds(366, 75, 133, 53);
-				panel_3.add(btnSua_1);
-				btnXoa_1.setFont(new Font("Arial", Font.BOLD, 14));
-				btnXoa_1.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						try {
-							
-							LoaiHang LH = new LoaiHang();
-							LH.setMaLH(Integer.parseInt(textMaSP1.getText()));
-							LoaiHangDAL LHD = new LoaiHangDAL();
-							int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn xóa loại hàng này", "Confirmation",
-									JOptionPane.YES_NO_OPTION);
-							if (confirmed == JOptionPane.YES_OPTION) {
-								if(LHD.ThemLoaiHang(LH, "xoaloaihang")) {
-									
-									JOptionPane.showMessageDialog(contentPane, "Xóa Loại Hàng Thành Công!");
-									resetValue();
-									hienThiMaSanPham();
-									btnXoa_1.setEnabled(false);
-									btnThem_1.setEnabled(true);
-								}
-							}
-							
-							
-						} catch (SQLException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						
-					}
-				});
-				
-				
-				btnXoa_1.setIcon(new ImageIcon(
-						Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Delete.png"))));
-				btnXoa_1.setFocusPainted(false);
-				btnXoa_1.setEnabled(false);
-				btnXoa_1.setBounds(572, 75, 133, 53);
-				panel_3.add(btnXoa_1);
-				btnLuu_1.setFont(new Font("Arial", Font.BOLD, 14));
-				btnLuu_1.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						try {
-							if(checkEmtyValueTabbed2()) {
-								LoaiHang LH = new LoaiHang();
-								LH.setMaLH(Integer.parseInt(textMaSP1.getText()));
-								LH.setTenLH(textTenSp.getText());
-								LoaiHangDAL LHD;
-								if(addbtn) {
-									try {
-										LHD = new LoaiHangDAL();
-										if(LHD.ThemLoaiHang(LH, "themloaihang")) {
-											JOptionPane.showMessageDialog(contentPane, "Thêm Thành công!");
-											resetValue();
-											hienThiMaSanPham();
-											addbtn = false;
-										}
-									} catch (SQLException e1) {
-										JOptionPane.showMessageDialog(contentPane, "Thêm Thất bại!");
-									}
-								}
-								if(fixbtn) {
-									try {
-										LHD = new LoaiHangDAL();
-										if(LHD.ThemLoaiHang(LH, "sualoaihang")) {
-											JOptionPane.showMessageDialog(contentPane, "Sửa Thành công!");
-											resetValue();
-											btnThem_1.setEnabled(true);
-											hienThiMaSanPham();
-											fixbtn = false;
-										}
-									} catch (SQLException e1) {
-										JOptionPane.showMessageDialog(contentPane, "Sửa Thất bại!");
-									}
-								}
-								
-							}
-						} catch (NumberFormatException | HeadlessException | SQLException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-					}
-				});
-				
-				
-				btnLuu_1.setIcon(new ImageIcon(
-						Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Save.png"))));
-				btnLuu_1.setFocusPainted(false);
-				btnLuu_1.setEnabled(false);
-				btnLuu_1.setBounds(793, 75, 133, 53);
-				panel_3.add(btnLuu_1);
-				
-				JPanel panel_9 = new JPanel();
-				panel_9.setBounds(0, 138, 1077, 314);
-				panel_3.add(panel_9);
-				
-				JScrollPane scrollPane_1 = new JScrollPane();
-				scrollPane_1.setBounds(133, 63, 792, 177);
-				
-				JLabel lblLoiHngSiu = new JLabel();
-				lblLoiHngSiu.setBounds(209, 10, 604, 47);
-				lblLoiHngSiu.setText("LOẠI HÀNG SIÊU THỊ");
-				lblLoiHngSiu.setHorizontalAlignment(SwingConstants.CENTER);
-				lblLoiHngSiu.setForeground(new Color(255, 128, 128));
-				lblLoiHngSiu.setFont(new Font("Arial", Font.BOLD, 20));
-				table_1.setDefaultEditor(Object.class, null);
-				JTableHeader header1 = table_1.getTableHeader();
-				scrollPane_1.setViewportView(table_1);
-				table_1.setRowHeight(30);
-				table_1.setFocusable(false);
-				panel_9.setLayout(null);
-				panel_9.add(lblLoiHngSiu);
-				panel_9.add(scrollPane_1);
-				table_1.addMouseListener(new MouseAdapter() {
-					public void mouseClicked(MouseEvent e) {
-						int row = table_1.getSelectedRow(); // get the selected row
-						String maLh = table_1.getModel().getValueAt(row, 0).toString();
-						String tenLh = table_1.getModel().getValueAt(row, 1).toString(); // get the value of the first column
-						
-						textMaSP1.setText(maLh);
-						textTenSp.setText(tenLh);
-
-						setEnable();
-						btnXoa_1.setEnabled(true);
-						btnSua_1.setEnabled(true);
-						btnThem_1.setEnabled(true);
-						btnLuu_1.setEnabled(false);
-						
-					}});
 		contentPane.add(panel_1);
 		contentPane.add(panel);
+		panel.setLayout(null);
+		panel.add(lbIconShop);
+		panel.add(lblNewLabel);
+		panel.add(lblNewLabel_10);
 		hienthisanpham("hien thi");
+		hienThiMaSanPham();
 		
 		
 
