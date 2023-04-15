@@ -4,6 +4,10 @@
  */
 package GUI;
 
+import java.awt.Toolkit;
+
+import javax.swing.ImageIcon;
+
 /**
  *
  * @author TruongHo
@@ -273,19 +277,23 @@ public class HoaDon1 extends javax.swing.JFrame {
         });
 
         jButton2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButton2.setIcon(new javax.swing.ImageIcon("D:\\laptrinhjava\\QuanLiSieuThi\\src\\GUI\\Image\\Change.png")); // NOI18N
+        jButton2.setIcon(new ImageIcon(
+				Toolkit.getDefaultToolkit().createImage(HoaDon1.class.getResource(".\\Image\\Delete.png")))); // NOI18N
         jButton2.setText("Đơn Hàng");
-
+        
         jButton3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButton3.setIcon(new javax.swing.ImageIcon("D:\\laptrinhjava\\QuanLiSieuThi\\src\\GUI\\Image\\Delete.png")); // NOI18N
+        jButton3.setIcon(new ImageIcon(
+				Toolkit.getDefaultToolkit().createImage(HoaDon1.class.getResource(".\\Image\\Add.png")))); // NOI18N
         jButton3.setText("Đơn Hàng");
 
         jButton4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButton4.setIcon(new javax.swing.ImageIcon("D:\\laptrinhjava\\QuanLiSieuThi\\src\\GUI\\Image\\Add.png")); // NOI18N
+        jButton4.setIcon(new ImageIcon(
+				Toolkit.getDefaultToolkit().createImage(HoaDon1.class.getResource(".\\Image\\Add.png")))); // NOI18N
         jButton4.setText("Hàng Hóa");
 
         jButton5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButton5.setIcon(new javax.swing.ImageIcon("D:\\laptrinhjava\\QuanLiSieuThi\\src\\GUI\\Image\\Save.png")); // NOI18N
+        jButton5.setIcon(new ImageIcon(
+				Toolkit.getDefaultToolkit().createImage(HoaDon1.class.getResource(".\\Image\\Save.png")))); // NOI18N
         jButton5.setText("Lưu");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -294,11 +302,13 @@ public class HoaDon1 extends javax.swing.JFrame {
         });
 
         jButton6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButton6.setIcon(new javax.swing.ImageIcon("D:\\laptrinhjava\\QuanLiSieuThi\\src\\GUI\\Image\\Print Sale.png")); // NOI18N
+        jButton6.setIcon(new ImageIcon(
+				Toolkit.getDefaultToolkit().createImage(HoaDon1.class.getResource(".\\Image\\Print Sale.png")))); // NOI18N
         jButton6.setText("Xuất Hóa Đơn");
 
         jButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButton1.setIcon(new javax.swing.ImageIcon("D:\\laptrinhjava\\QuanLiSieuThi\\src\\GUI\\Image\\Add.png")); // NOI18N
+        jButton1.setIcon(new ImageIcon(
+				Toolkit.getDefaultToolkit().createImage(HoaDon1.class.getResource(".\\Image\\Change.png")))); // NOI18N
         jButton1.setText("Đơn Hàng");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -389,7 +399,8 @@ public class HoaDon1 extends javax.swing.JFrame {
         );
 
         jButton7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jButton7.setIcon(new javax.swing.ImageIcon("D:\\laptrinhjava\\QuanLiSieuThi\\src\\GUI\\Image\\Back.png")); // NOI18N
+        jButton7.setIcon(new ImageIcon(
+				Toolkit.getDefaultToolkit().createImage(HoaDon1.class.getResource(".\\Image\\Back.png")))); // NOI18N
         jButton7.setText("Hệ Thống");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
