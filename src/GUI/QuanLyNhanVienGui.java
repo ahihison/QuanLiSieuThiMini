@@ -106,7 +106,6 @@ public class QuanLyNhanVienGui extends JFrame {
 	 * 
 	 * @throws SQLException
 	 */
-	JComboBox comboBox;
 	JLabel lbThemanh = new JLabel();
 	File selectedFile;
 	ImageIcon icon = new ImageIcon();
@@ -118,10 +117,10 @@ public class QuanLyNhanVienGui extends JFrame {
 	JButton btnThem = new JButton("Thêm");
 	JButton btnLuu = new JButton("Lưu");
 	int lastRow;
-	JRadioButton radio1 = new JRadioButton("Tên nhân viên");
-	JRadioButton radio2 = new JRadioButton("Mã nhân viên");
-	ButtonGroup btg1 = new ButtonGroup();
-        ButtonGroup btg2 = new ButtonGroup();
+	JRadioButton radioSapxepten = new JRadioButton("Tên nhân viên");
+	JRadioButton radioSapxepma = new JRadioButton("Mã nhân viên");
+	ButtonGroup groupSapxep = new ButtonGroup();
+        ButtonGroup groupGioitinh = new ButtonGroup();
         JRadioButton radioNam = new JRadioButton("Nam");
         JRadioButton radioNu = new JRadioButton("Nữ");
 	JScrollPane scrollPane = new JScrollPane();
@@ -135,7 +134,7 @@ public class QuanLyNhanVienGui extends JFrame {
 	JLabel lbThongbao = new JLabel();
 	String oldMaSP = null;
 	private JTextField textFieldSearch;
-boolean checkFix = false;
+        boolean checkFix = false;
 /*
 	public void hienthisanpham(String condition) throws SQLException {
 		NhanVienDAL nvDal = new NhanVienDAL();
@@ -180,7 +179,7 @@ if (condition == "them") {
 		
 		lastRow = table.getRowCount() - 1; // get index of the last row
 		lastValueMaNv = table.getValueAt(lastRow, 1); // get the value at the last row and column n
-	}
+	}*/
 	
 
 	public void resetValue() {
@@ -198,14 +197,18 @@ if (condition == "them") {
 		textFieldDienthoai.setEnabled(true);
 		textFieldTennv.setText("");
 		textFieldTennv.setEnabled(true);
-		comboBox.setEnabled(true);
+                textFieldDiachi.setText("");
+                textFieldDiachi.setEnabled(true);
+                textFieldTaikhoan.setText("");
+                textFieldTaikhoan.setEnabled(true);
+                textFieldMatkhau.setText("");
+                textFieldMatkhau.setEnabled(true);
 		lbThemanh.setIcon(null);
 		btnCapNhatAnh.setEnabled(true);
 		btnThem.setEnabled(true);
 		btnXoa.setEnabled(false);
 		btnSua.setEnabled(false);
 		btnLuu.setEnabled(false);
-		comboBox.setSelectedItem(null);
 
 	}
 	public void unSetEnable() {
@@ -216,7 +219,9 @@ if (condition == "them") {
 		textFieldNgaysinh.setEnabled(true);
 		textFieldDienthoai.setEnabled(true);
 		textFieldTennv.setEnabled(true);
-		comboBox.setEnabled(true);
+                textFieldDiachi.setEnabled(true);
+                textFieldTaikhoan.setEnabled(true);
+                textFieldMatkhau.setEnabled(true);
 		btnCapNhatAnh.setEnabled(true);
 		btnThem.setEnabled(true);
 		btnXoa.setEnabled(false);
@@ -224,21 +229,20 @@ if (condition == "them") {
 		btnLuu.setEnabled(false);
 	}
 	public void setEnable() {
-
 		textFieldImg.setEnabled(false);
-
 		textFieldManv.setEnabled(false);
-
 		textFieldCmnd.setEnabled(false);
 		textFieldNgayvaolam.setEnabled(false);
 		textFieldNgaysinh.setEnabled(false);
 		textFieldDienthoai.setEnabled(false);
 		textFieldTennv.setEnabled(false);
-		comboBox.setEnabled(false);
+                textFieldDiachi.setEnabled(false);
+                textFieldTaikhoan.setEnabled(false);
+                textFieldMatkhau.setEnabled(false);
 		btnCapNhatAnh.setEnabled(false);
 	}
 
-	public Boolean checkEmtyValue() throws SQLException {
+/*	public Boolean checkEmtyValue() throws SQLException {
 		// regular expression pattern
 		if(textFieldManv.getText().isEmpty()) {
 			JOptionPane.showMessageDialog(contentPane, "Mã sản phẩm trống!");
@@ -355,7 +359,7 @@ if (condition == "them") {
 		btnCapNhatAnh.setBounds(159, 11, 111, 28);
 
 		btnCapNhatAnh.setText("Cập nhật ảnh");
-/*		btnCapNhatAnh.setEnabled(false);
+		btnCapNhatAnh.setEnabled(false);
 		btnCapNhatAnh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fileChooser = new JFileChooser();
@@ -376,7 +380,7 @@ if (condition == "them") {
 
 				}
 			}
-		});*/
+		});
 		btnCapNhatAnh.setFocusPainted(false);
 		btnCapNhatAnh.setHorizontalAlignment(SwingConstants.LEADING);
 		btnCapNhatAnh.setFont(new Font("Arial", Font.PLAIN, 11));
@@ -399,7 +403,7 @@ if (condition == "them") {
 
 		textFieldTennv = new JTextField();
 		textFieldTennv.setBounds(710, 11, 117, 28);
-		textFieldTennv.setEnabled(false);
+		//textFieldTennv.setEnabled(false);
 		textFieldTennv.setColumns(10);
 
 		JLabel lblNewLabel_4 = new JLabel("Ngày sinh");
@@ -415,8 +419,8 @@ if (condition == "them") {
 
 		radioNam.setBounds(230, 50, 50, 20);
 		radioNu.setBounds(230, 80, 50, 20);
-                btg2.add(radioNam);
-                btg2.add(radioNu);
+                groupGioitinh.add(radioNam);
+                groupGioitinh.add(radioNu);
                 
 		JLabel lblNewLabel_7 = new JLabel("CMND");
 		lblNewLabel_7.setBounds(420, 48, 62, 20);
@@ -442,11 +446,12 @@ if (condition == "them") {
 		//textFieldNgayvaolam.setEnabled(false);
 		textFieldNgayvaolam.setColumns(10);
                 
-                JLabel lblNewLabel_10 = new JLabel("Địa chỉ");
-                lblNewLabel_10.setBounds(420, 80, 62, 26);
+                JLabel lblNewLabel_13 = new JLabel("Địa chỉ");
+                lblNewLabel_13.setBounds(420, 80, 62, 26);
                 
                 textFieldDiachi = new JTextField();
                 textFieldDiachi.setBounds(506, 80, 320, 29);
+                //textFieldDiachi.setEnabled(false);
                 textFieldDiachi.setColumns(10);
                 
                 JLabel lblNewLabel_11 = new JLabel("Tài khoản");
@@ -454,6 +459,7 @@ if (condition == "them") {
                 
                 textFieldTaikhoan = new JTextField();
                 textFieldTaikhoan.setBounds(914, 80, 138, 29);
+                //textFieldTaikhoan.setEnabled(false);
                 textFieldTaikhoan.setColumns(10);
                 
                 JLabel lblNewLabel_12 = new JLabel("Mật khẩu");
@@ -461,17 +467,18 @@ if (condition == "them") {
                 
                 textFieldMatkhau = new JTextField();
                 textFieldMatkhau.setBounds(914, 115, 138, 29);
+                //textFieldMatkhau.setEnabled(false);
                 textFieldMatkhau.setColumns(10);
                 
 		JPanel panel_6 = new JPanel();
 		panel_6.setBounds(0, 210, 1067, 78);
 		btnLuu.setBounds(10, 10, 104, 53);
 
-/*		btnLuu.setEnabled(false);
+		btnLuu.setEnabled(false);
 		btnLuu.setFocusPainted(false);
 		btnLuu.setIcon(new ImageIcon(
 		Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Save.png"))));
-		btnLuu.addActionListener(new ActionListener() {
+/*		btnLuu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					if (checkEmtyValue()) {
@@ -594,16 +601,16 @@ if (condition == "them") {
 				}
 
 			}
-		});
+		});*/
 		btnThem.setIcon(new ImageIcon(
-				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Add.png"))));*/
+				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Add.png"))));
 		btnSua.setBounds(283, 10, 104, 53);
 
-/*		btnSua.setEnabled(false);
+		btnSua.setEnabled(false);
 		btnSua.setIcon(new ImageIcon(
 				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Change.png"))));
 		btnSua.setFocusPainted(false);
-		btnSua.addActionListener(new ActionListener() {
+/*		btnSua.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				fixbtn = true;
 				oldMaSP = textFieldManv.getText();
@@ -621,11 +628,11 @@ if (condition == "them") {
 		});*/
 		btnXoa.setBounds(419, 10, 104, 53);
 
-/*		btnXoa.setEnabled(false);
+		btnXoa.setEnabled(false);
 		btnXoa.setIcon(new ImageIcon(
 				Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Delete.png"))));
 		btnXoa.setFocusPainted(false);
-	btnXoa.addActionListener(new ActionListener() {
+/*        	btnXoa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int confirmed = JOptionPane.showConfirmDialog(null, "Bạn muốn xóa sản phẩm này", "Confirmation",
 						JOptionPane.YES_NO_OPTION);
@@ -655,9 +662,9 @@ if (condition == "them") {
 
 		JButton btnDongBo = new JButton("");
 		btnDongBo.setBounds(563, 10, 104, 53);
-/*		btnDongBo.setIcon(new ImageIcon(
+		btnDongBo.setIcon(new ImageIcon(
 				Toolkit.getDefaultToolkit().createImage(QuanLyNhanVienGui.class.getResource(".\\Image\\Refresh-icon.png"))));
-		btnDongBo.addActionListener(new ActionListener() {
+/*		btnDongBo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					hienthisanpham("hien thi");
@@ -670,11 +677,11 @@ if (condition == "them") {
 		btnDongBo.setFocusPainted(false);
 
 		JButton btnSapxep = new JButton("Sắp xếp");
-/*		btnSapxep.setFocusPainted(false);
-		btnSapxep.addActionListener(new ActionListener() {
+		btnSapxep.setFocusPainted(false);
+/*		btnSapxep.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				NhanVienDAL nvd;
-				if (radio1.isSelected()) {
+				if (radioSapxepten.isSelected()) {
 
 					
 					try {
@@ -687,7 +694,7 @@ if (condition == "them") {
 					}
 
 				}
-				if (radio2.isSelected()) {
+				if (radioSapxepma.isSelected()) {
 
 					
 					try {
@@ -703,21 +710,21 @@ if (condition == "them") {
 			}
 		});*/
 
-		btg1.add(radio1);
-		btg1.add(radio2);
+		groupSapxep.add(radioSapxepten);
+		groupSapxep.add(radioSapxepma);
 		GroupLayout gl_panel_7 = new GroupLayout(panel_7);
 		gl_panel_7.setHorizontalGroup(gl_panel_7.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_7.createSequentialGroup().addContainerGap()
 						.addComponent(btnSapxep, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE).addGap(18)
-						.addComponent(radio1, GroupLayout.PREFERRED_SIZE, 119, GroupLayout.PREFERRED_SIZE)
+						.addComponent(radioSapxepten, GroupLayout.PREFERRED_SIZE, 119, GroupLayout.PREFERRED_SIZE)
 						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addComponent(radio2, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
+						.addComponent(radioSapxepma, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
 						.addContainerGap(15, Short.MAX_VALUE)));
 		gl_panel_7.setVerticalGroup(gl_panel_7.createParallelGroup(Alignment.LEADING).addGroup(Alignment.TRAILING,
 				gl_panel_7.createSequentialGroup().addContainerGap()
 						.addGroup(gl_panel_7.createParallelGroup(Alignment.BASELINE)
 								.addComponent(btnSapxep, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-								.addComponent(radio1).addComponent(radio2))
+								.addComponent(radioSapxepten).addComponent(radioSapxepma))
 						.addContainerGap()));
 		panel_7.setLayout(gl_panel_7);
 
@@ -828,11 +835,11 @@ if (condition == "them") {
 		panel_6.add(btnXoa);
 		panel_6.add(btnDongBo);
 		panel_6.add(panel_7);
-/*		  icon = new ImageIcon(
+		icon = new ImageIcon(
 				     Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource("/GUI/Image/Background.png")));
 				     Image image_bg = icon.getImage();
 				     Image resizedImg_bg = image_bg.getScaledInstance(1300, 130, Image.SCALE_SMOOTH);
-				     ImageIcon resizedIcon_bg = new ImageIcon(resizedImg_bg);*/
+				     ImageIcon resizedIcon_bg = new ImageIcon(resizedImg_bg);
 		panel_2.setLayout(null);
 		panel_5.setLayout(null);
 		lbThemanh.setBounds(10, 0, 139, 123);
@@ -854,7 +861,7 @@ if (condition == "them") {
 		panel_5.add(lblNewLabel_9);
 		panel_5.add(textFieldDienthoai);
 		panel_5.add(textFieldNgayvaolam);
-                panel_5.add(lblNewLabel_10);
+                panel_5.add(lblNewLabel_13);
                 panel_5.add(textFieldDiachi);
                 panel_5.add(lblNewLabel_11);
                 panel_5.add(textFieldTaikhoan);
@@ -870,7 +877,7 @@ if (condition == "them") {
 		JButton btnTimKiem = new JButton("Tìm Kiếm");
 		btnTimKiem.setFocusPainted(false);
 		btnTimKiem.setHorizontalAlignment(SwingConstants.LEADING);
-/*		btnTimKiem.addActionListener(new ActionListener() {
+		btnTimKiem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(textFieldSearch.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(contentPane, "Chưa nhập nội dung tìm kiếm!");
@@ -880,13 +887,13 @@ if (condition == "them") {
 					
 				}
 			}
-		});*/
-/*		ImageIcon iconSearch = new ImageIcon(
+		});
+		ImageIcon iconSearch = new ImageIcon(
 			     Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//Find.png")));
 			     Image imageSearch = iconSearch.getImage();
 			     Image resizedImgSearch = imageSearch.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 			     ImageIcon resizedIconSearch = new ImageIcon(resizedImgSearch);
-		btnTimKiem.setIcon(resizedIconSearch);*/
+		btnTimKiem.setIcon(resizedIconSearch);
 	
 		btnTimKiem.setBounds(582, 150, 123, 26);
 		panel_5.add(btnTimKiem);
@@ -919,7 +926,7 @@ if (condition == "them") {
 		JLabel lbIconShop = new JLabel("");
 		lbIconShop.setBounds(10, 0, 170, 65);
 		lblNewLabel.setFont(new Font("Arial", Font.BOLD, 24));
-/*		icon = new ImageIcon(
+		icon = new ImageIcon(
 	     Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".//Image//shop.png")));
 	     Image image = icon.getImage();
 	     Image resizedImg = image.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
@@ -937,7 +944,7 @@ if (condition == "them") {
 			     ImageIcon resizedIcon2 = new ImageIcon(resizedImg2);
 		lblNewLabel_10.setIcon(resizedIcon2);
 		lblNewLabel_10.setBounds(0, 0, 1078, 104);
-		panel.add(lblNewLabel_10);*/
+		panel.add(lblNewLabel_10);
 		contentPane.setLayout(null);
 		contentPane.add(tabbedPane);
 		contentPane.add(panel_1);

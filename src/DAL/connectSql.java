@@ -15,6 +15,15 @@ public class connectSql {
 		String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=QuanLySieuThi;user=sa;password=sa;encrypt=true;trustServerCertificate=true;";
 		conn = DriverManager.getConnection(connectionUrl);
 	}
+	public void closeConnection() {
+		try {
+			if(conn!=null) {
+				conn.close();
+			}
+		}catch(SQLException ex) {
+			System.out.println(ex);
+		}
+	}
 	
 
 }

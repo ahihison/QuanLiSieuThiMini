@@ -1,4 +1,4 @@
-package BLL;
+package DTO;
 
 public class NhaCungCap {
 	private int maNCC;

@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import BLL.SanPham;
+import DTO.SanPham;
 
 public class SanPhamDAL extends connectSql {
 	public SanPhamDAL() throws SQLException {
@@ -19,6 +19,10 @@ public class SanPhamDAL extends connectSql {
 
 	public ArrayList<SanPham> docSanPham(String condition, String value) {
 		String sql = "";
+		String part2="";
+		String part1 ="";
+		String partPriceFrom = "";
+		String partPriceTo="";
 		ArrayList<SanPham> arrList = new ArrayList<SanPham>();
 		try {
 			if (condition.equals("sapxeptheoten")) {
@@ -31,16 +35,63 @@ public class SanPhamDAL extends connectSql {
 				sql = "select * from SANPHAM where isDeleted = 1 order by GiaBan";
 			}
 			if (condition.equals("timkiem")) {
-				sql = "select * from SANPHAM where isDeleted = 1 and TenSP LIKE ?";
+				String[] parts = value.split(",");
+				 part1 = parts[0];
+				 part2 = parts[1]; 
+				
+				 if(part2.equals("0")) {
+				
+					 sql = "select * from SANPHAM where isDeleted = 1 and TenSP LIKE ?";
+				 }
+				 else {
+					 sql = "select * from SANPHAM where isDeleted = 1 and TenSP LIKE ? and MaLH = ?";
+				 }
 
 			}
-
+			if(condition.equals("timkiemgia")) {
+				String[] parts = value.split(",");
+				 part1 = parts[0];
+				 part2 = parts[1]; 
+				 partPriceFrom = parts[2];
+				 partPriceTo=parts[3];
+				 if(part2.equals("0")) {
+						
+					 sql = "select * from SANPHAM where isDeleted = 1 and TenSP LIKE ? and GiaBan BETWEEN  ? AND  ? ";
+				 }
+				 else {
+					 sql = "select * from SANPHAM where isDeleted = 1 and TenSP LIKE ? and MaLH = ? and GiaBan BETWEEN  ? AND  ?";
+				 }
+				 
+			}
+			if (condition.equals("docsanphamtheoid")) {
+				sql = "select * from SANPHAM where isDeleted = 1 and MaLH =" + value;
+			}
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			if (condition.equals("timkiem")) {
-				pstm.setString(1, "%" + value + "%");
+				if(part2.equals("0")) {
+					pstm.setString(1, "%" + part1 + "%");
+				}
+				if(part2.equals("0")==false) {
+					pstm.setString(1, "%" + part1 + "%");
+					pstm.setString(2, part2);
+				}
+				
+			}
+			if(condition.equals("timkiemgia")) {
+				if(part2.equals("0")) {
+					pstm.setString(1, "%" + part1 + "%");
+					pstm.setInt(2, Integer.parseInt(partPriceFrom));
+					pstm.setInt(3, Integer.parseInt(partPriceTo));
+				}
+				if(part2.equals("0")==false) {
+					pstm.setString(1, "%" + part1 + "%");
+					pstm.setString(2, part2);
+					pstm.setInt(3, Integer.parseInt(partPriceFrom));
+					pstm.setInt(4, Integer.parseInt(partPriceTo));
+				}
 			}
 			ResultSet rs = pstm.executeQuery();
-			
+
 			while (rs.next()) {
 				SanPham sp = new SanPham();
 				sp.setMaSp(rs.getInt("MaSP"));
@@ -55,7 +106,7 @@ public class SanPhamDAL extends connectSql {
 				arrList.add(sp);
 			}
 		} catch (Exception e) {
-			
+
 		}
 		return arrList;
 	}
@@ -97,7 +148,7 @@ public class SanPhamDAL extends connectSql {
 		PreparedStatement pstm = conn.prepareStatement(sql);
 
 		try {
-			
+
 			pstm.setString(1, sp.getTenSp());
 			pstm.setFloat(2, sp.getGiaMua());
 			pstm.setFloat(3, sp.getGiaBan());
@@ -123,6 +174,8 @@ public class SanPhamDAL extends connectSql {
 	public static void main(String[] args) throws SQLException {
 		SanPhamDAL sp = new SanPhamDAL();
 		SanPham spthem = new SanPham();
+		ArrayList<SanPham> arr = new ArrayList<SanPham>();
+		arr = sp.docSanPham("timkiem", "a,0");
 
 	}
 

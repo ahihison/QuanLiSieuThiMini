@@ -5,8 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import BLL.LoaiHang;
-import BLL.NhaCungCap;
+import DTO.LoaiHang;
+import DTO.NhaCungCap;
 
 public class NhaCungCapDAL extends connectSql {
 
@@ -31,7 +31,7 @@ public class NhaCungCapDAL extends connectSql {
 		return arrNCC;
 	}
 	public int getLastMaNCC() throws SQLException {
-		String sql = "SELECT TOP 1 MaNCC FROM NHACC ORDER BY MaNCC DESC";
+		String sql = "SELECT IDENT_CURRENT('NHACC') AS MaNCC";
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		ResultSet rs = pstm.executeQuery();
 		  if (rs.next()) {

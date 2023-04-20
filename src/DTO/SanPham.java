@@ -1,4 +1,4 @@
-package BLL;
+package DTO;
 
 public class SanPham {
 	private int maSp,maLh,isDeleted;

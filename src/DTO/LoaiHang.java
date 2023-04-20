@@ -1,4 +1,4 @@
-package BLL;
+package DTO;
 
 public class LoaiHang {
 	private int maLH;

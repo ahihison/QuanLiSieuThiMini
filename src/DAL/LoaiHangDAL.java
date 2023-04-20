@@ -5,8 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import BLL.LoaiHang;
-import BLL.SanPham;
+import DTO.LoaiHang;
+import DTO.SanPham;
 
 public class LoaiHangDAL extends connectSql {
 	
@@ -33,16 +33,18 @@ public class LoaiHangDAL extends connectSql {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+//		closeConnection();
 		return arrLoaihang;
 	}
 	public int getLastMaLH() throws SQLException {
-		String sql = "SELECT TOP 1 MaLH FROM LOAIHANG ORDER BY MALH DESC";
+		String sql = "SELECT IDENT_CURRENT('LOAIHANG') AS MaLH";
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		ResultSet rs = pstm.executeQuery();
 		  if (rs.next()) {
 		        int maxColumnValue = rs.getInt("MaLH");
 		        return maxColumnValue;
 		    }
+		  closeConnection();
 		  return 0;
 	}
 	public ArrayList<LoaiHang> docLoaiHangMaLH(int maLh) throws SQLException{
@@ -57,48 +59,66 @@ public class LoaiHangDAL extends connectSql {
 			lh.setTenLH(rs.getString(2));
 			arrLoaihang.add(lh);
 		}
-	
+	closeConnection();
 	return arrLoaihang;
 	}
-	public boolean ThemLoaiHang(LoaiHang Lh,String condition) throws SQLException {
-		String sql ="";
-		if(condition.equals("themloaihang")) {
-			sql = "insert into LOAIHANG (TenLH,isDeleted) values (?,?)";
-		}
-		if(condition.equals("sualoaihang")) {
-			sql = "update LOAIHANG set TenLH = ? where MaLH = ? ";
-		}
-		if(condition.equals("xoaloaihang")) {
-			sql = "update LOAIHANG set isDeleted =" + 0 + " where MaLH = ?";
-		}
+	public int getMaLh(String value) throws SQLException {
+		String sql = "";
+		sql ="select MaLH from LOAIHANG where TenLH = ?";
 		PreparedStatement pstm = conn.prepareStatement(sql);
-		try {
-			
-			if(condition.equals("sualoaihang")) {
-				pstm.setString(1, Lh.getTenLH());
-				pstm.setInt(2, Lh.getMaLH());
-			}
-			if(condition.equals("xoaloaihang")) {
-				pstm.setInt(1, Lh.getMaLH());
-			}
-			if(condition.equals("themloaihang")) {
-				pstm.setString(1, Lh.getTenLH());
-				pstm.setInt(2, 1);
-			}
-			
-			pstm.executeUpdate();
-		} catch (Exception e) {
-
-			return false;
+		pstm.setString(1, value);
+		ResultSet rs = pstm.executeQuery();
+		while(rs.next()) {
+			return rs.getInt("MaLH");
 		}
-		
-		return true;
-		
+		return 0;
 	}
+	public boolean ThemLoaiHang(LoaiHang Lh, String condition) throws SQLException {
+	    String sql = "";
+	    switch (condition) {
+	        case "themloaihang":
+	            sql = "INSERT INTO LOAIHANG (TenLH, isDeleted) VALUES (?, ?)";
+	            break;
+	        case "sualoaihang":
+	            sql = "UPDATE LOAIHANG SET TenLH = ? WHERE MaLH = ?";
+	            break;
+	        case "xoaloaihang":
+	            sql = "UPDATE LOAIHANG SET isDeleted = 0 WHERE MaLH = ?";
+	            break;
+	        default:
+	            return false;
+	    }
+	    try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+	        if (condition.equals("sualoaihang")) {
+	            pstm.setString(1, Lh.getTenLH());
+	            pstm.setInt(2, Lh.getMaLH());
+	        }
+	        if (condition.equals("xoaloaihang")) {
+	            pstm.setInt(1, Lh.getMaLH());
+	        }
+	        if (condition.equals("themloaihang")) {
+	            pstm.setString(1, Lh.getTenLH());
+	            pstm.setInt(2, 1);
+	        }
+
+	        int result = pstm.executeUpdate();
+	        if (result == 0) {
+	            return false;
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        closeConnection();
+	    }
+	    return true;
+	}
+
 	
 	public static void main(String[] args) throws SQLException {
 		LoaiHangDAL test = new LoaiHangDAL();
-		int temp = test.getLastMaLH();
+		 
+		System.out.println(test.getMaLh("Hàng điện máy"));
 		
 	}
 }
