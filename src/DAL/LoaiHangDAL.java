@@ -36,8 +36,18 @@ public class LoaiHangDAL extends connectSql {
 //		closeConnection();
 		return arrLoaihang;
 	}
+	public String getNameLoaiHang(int maLH) throws SQLException {
+		String sql = "select TenLH from LOAIHANG where MaLH = "+ maLH;
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		ResultSet rs = pstm.executeQuery();
+		if (rs.next()) {
+		    String tenLH = rs.getString("TenLH");
+		    return tenLH;
+		}
+		return "";
+	}
 	public int getLastMaLH() throws SQLException {
-		String sql = "SELECT IDENT_CURRENT('LOAIHANG') AS MaLH";
+		String sql = "SELECT TOP1 ('LOAIHANG') AS MaLH";
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		ResultSet rs = pstm.executeQuery();
 		  if (rs.next()) {
@@ -118,7 +128,7 @@ public class LoaiHangDAL extends connectSql {
 	public static void main(String[] args) throws SQLException {
 		LoaiHangDAL test = new LoaiHangDAL();
 		 
-		System.out.println(test.getMaLh("Hàng điện máy"));
+		System.out.println(test.getNameLoaiHang(31));
 		
 	}
 }

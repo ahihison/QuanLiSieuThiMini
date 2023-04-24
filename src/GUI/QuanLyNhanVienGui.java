@@ -347,7 +347,7 @@ if (condition == "them") {
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(1093, 118, 0, 522);
 
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(5, 86, 1082, 600);
 
 		JPanel panel_2 = new JPanel();

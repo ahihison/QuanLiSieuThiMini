@@ -145,6 +145,7 @@ public class QuanLySanPhamGui extends JFrame {
 	JTextField textFieldSearch = new JTextField();
 	JTextField textFieldTo = new JTextField();
 	JTextField textFieldFrom = new JTextField();
+	boolean btnfind = false;
 //	dung grap 2d tao size cho anh
 	int newWidth = 130;
 	int newHeight = 110;
@@ -179,7 +180,6 @@ public class QuanLySanPhamGui extends JFrame {
 	JButton btnXoa_2 = new JButton("Xóa");
 	JButton btnLuu_2 = new JButton("Lưu");
 	String oldTenNcc = null;
-	
 
 	public void resetValueTabbed3() {
 		textNhaCC.setText("");
@@ -223,22 +223,38 @@ public class QuanLySanPhamGui extends JFrame {
 			arrSp = spbll.searchProductById(textFieldSearch.getText(), rsRenderType + "");
 
 		}
-		if(condition=="suatheoid") {
-			arrSp = spbll.searchProductById(textFieldSearch.getText(), rsRenderType + "");
-			LoaiHangDAL test = new LoaiHangDAL();
-			ArrayList<LoaiHang> arrMaLH = test.docLoaiHang();
-			DefaultComboBoxModel combo = new DefaultComboBoxModel();
-			comboBox.setModel(combo);
-			for (LoaiHang malh : arrMaLH) {
-				combo.addElement(malh.getTenLH());
-
-			}
-		}
-		if(condition=="timkiemtheogia") {
+		if (condition == "suatheoid") {
+			if (rsRenderType > 0) {
 			
+				arrSp = spbll.searchProductById(textFieldSearch.getText(), rsRenderType + "");
+				LoaiHangDAL test = new LoaiHangDAL();
+				ArrayList<LoaiHang> arrMaLH = test.docLoaiHang();
+				DefaultComboBoxModel combo = new DefaultComboBoxModel();
+				comboBox.setModel(combo);
+				for (LoaiHang malh : arrMaLH) {
+					combo.addElement(malh.getTenLH());
+
+				}
+			} else {
+				
+				arrSp = spDal.docSanPham("docsanpham", null);
+				LoaiHangDAL test = new LoaiHangDAL();
+				ArrayList<LoaiHang> arrMaLH = test.docLoaiHang();
+				DefaultComboBoxModel combo = new DefaultComboBoxModel();
+				comboBox.setModel(combo);
+				for (LoaiHang malh : arrMaLH) {
+					combo.addElement(malh.getTenLH());
+
+				}
+			}
+
+		}
+		if (condition == "timkiemtheogia") {
+
 			String priceFrom = textFieldFrom.getText().replaceAll(",", "");
 			String priceTo = textFieldTo.getText().replaceAll(",", "");
-			arrSp= spbll.searchProductByPrice(textFieldSearch.getText(),rsRenderType+""+","+priceFrom+","+priceTo);
+			arrSp = spbll.searchProductByPrice(textFieldSearch.getText(),
+					rsRenderType + "" + "," + priceFrom + "," + priceTo);
 		}
 		if (condition == "them") {
 			arrSp = spDal.docSanPham("docsanpham", null);
@@ -251,10 +267,11 @@ public class QuanLySanPhamGui extends JFrame {
 
 			}
 		}
-if(arrSp.isEmpty()) {
-	JOptionPane.showMessageDialog(contentPane, "Không tìm thấy sản phẩm!");
-	return;
-}
+		if (arrSp.isEmpty() && btnfind || arrSp.isEmpty()) {
+			JOptionPane.showMessageDialog(contentPane, "Không tìm thấy sản phẩm!");
+			btnfind = false;
+			return;
+		}
 		String[] columnNames = { "MaLH", "MaSP", "TenSP", "DonVi", "HSD", "GiaMua", "GiaBan", "Image" };
 		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
@@ -620,7 +637,6 @@ if(arrSp.isEmpty()) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					
 
 				}
 				if (selectedIndex == 1) {
@@ -881,7 +897,6 @@ if(arrSp.isEmpty()) {
 								if (selectedFile == null) {
 									File file = new File(textFieldImg.getText());
 									String fileName = file.getName();
-
 									sp.setImg(fileName);
 								} else {
 									sp.setImg(selectedFile.getName());
@@ -903,7 +918,18 @@ if(arrSp.isEmpty()) {
 									JOptionPane.showMessageDialog(contentPane, "Sửa thành công");
 									resetValue();
 									setEnable();
-									hienthisanpham("suathiid");
+									if (rsRenderType > 0) {
+										if(textFieldFrom.getText().isEmpty())
+										{
+											hienthisanpham("suatheoid");
+										}
+										else if(textFieldFrom.getText().isEmpty()==false) {
+											hienthisanpham("timkiemtheogia");
+										}
+										
+									} else if (rsRenderType == 0) {
+										hienthisanpham("hien thi");
+									}
 									fixbtn = false;
 								} else {
 									JOptionPane.showMessageDialog(contentPane, "Sửa thất bại");
@@ -927,10 +953,19 @@ if(arrSp.isEmpty()) {
 			public void actionPerformed(ActionEvent e) {
 				addbtn = true;
 				resetValue();
+				SanPhamDAL spdDal;
+				try {
+					spdDal = new SanPhamDAL();
+					int masp =spdDal.getLastMaSP();
+					masp++;
+					textFieldMasp.setText("" + masp);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 				textFieldMasp.setEnabled(false);
-				int masp = (int) lastValueMaSp;
-				masp++;
-				textFieldMasp.setText("" + masp);
+				
 				btnThem.setEnabled(false);
 				btnLuu.setEnabled(true);
 				btnXoa.setEnabled(false);
@@ -963,7 +998,13 @@ if(arrSp.isEmpty()) {
 
 				try {
 					String valueSelect = comboBox.getSelectedItem().toString();
-					hienthisanpham("suatheoid");
+					if(textFieldFrom.getText().isEmpty()) {
+						hienthisanpham("suatheoid");
+					}
+					else if(textFieldFrom.getText().isEmpty()==false) {
+						hienthisanpham("timkiemtheogia");
+					}
+					
 					comboBox.setSelectedItem(valueSelect);
 
 				} catch (SQLException e1) {
@@ -1213,10 +1254,8 @@ if(arrSp.isEmpty()) {
 		JPanel panel_7_1 = new JPanel();
 		panel_7_1.setBorder(null);
 
-		
 		comboBoxSearch.setFont(new Font("Arial", Font.BOLD, 14));
 
-		
 		comboBoxSearch.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -1230,14 +1269,12 @@ if(arrSp.isEmpty()) {
 					if (rsRenderType > 0) {
 
 						hienthisanpham("hienthitheoid");
-					
 
 					}
 					if (rsRenderType == 0) {
 						hienthisanpham("hien thi");
-						
+
 					}
-					
 
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
@@ -1246,9 +1283,7 @@ if(arrSp.isEmpty()) {
 
 			}
 		});
-		
 
-		
 		textFieldFrom.setColumns(10);
 		textFieldFrom.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
@@ -1270,7 +1305,7 @@ if(arrSp.isEmpty()) {
 				}
 			}
 		});
-		
+
 		textFieldTo.setColumns(10);
 		textFieldTo.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
@@ -1299,7 +1334,6 @@ if(arrSp.isEmpty()) {
 		JLabel lblNewLabel_16 = new JLabel("Tới");
 		lblNewLabel_16.setFont(new Font("Arial", Font.BOLD, 14));
 
-		
 		textFieldSearch.setColumns(10);
 
 		JButton btnTimKiem = new JButton("Tìm Kiếm");
@@ -1312,55 +1346,50 @@ if(arrSp.isEmpty()) {
 
 				}
 				if (!textFieldSearch.getText().isEmpty()) {
-
+					btnfind = true;
 					SanPhamBLL spbll = new SanPhamBLL();
 					ArrayList<SanPham> arr = new ArrayList<SanPham>();
 					try {
 						arr = spbll.searchProductById(textFieldSearch.getText(), rsRenderType + "");
 						if (!arr.isEmpty()) {
 							if (!textFieldFrom.getText().isEmpty() || !textFieldTo.getText().isEmpty()) {
-								if(textFieldFrom.getText().isEmpty()) {
+								if (textFieldFrom.getText().isEmpty()) {
 									JOptionPane.showMessageDialog(contentPane, "Khoảng giá cần tìm trống!");
 									textFieldFrom.requestFocus();
-								}
-								else if(textFieldTo.getText().isEmpty()) {
+								} else if (textFieldTo.getText().isEmpty()) {
 									JOptionPane.showMessageDialog(contentPane, "Khoảng giá cần tìm trống!");
 									textFieldTo.requestFocus();
-								}
-								else {
+								} else {
 									String inputFrom = textFieldFrom.getText().replaceAll(",", "");
 									String inputTo = textFieldTo.getText().replaceAll(",", "");
-								isNumber = inputFrom.matches(patternNumber);
-								boolean isNumber2 = inputTo.matches(patternNumber);
-								
-								if (!isNumber) {
-									JOptionPane.showMessageDialog(contentPane, "Giá trị phải là số");
-									textFieldFrom.requestFocus();
-									textFieldFrom.selectAll();
-									
-								}
-								else if (!isNumber2) {
-									JOptionPane.showMessageDialog(contentPane, "Giá trị phải là số");
-									textFieldTo.requestFocus();
-									textFieldTo.selectAll();
-									
-								}
-								else {
-									if(Integer.parseInt(textFieldFrom.getText().replaceAll(",", ""))> Integer.parseInt(textFieldTo.getText().replaceAll(",", ""))) {
-										JOptionPane.showMessageDialog(contentPane, "Khoảng giá không hợp lê!");
+									isNumber = inputFrom.matches(patternNumber);
+									boolean isNumber2 = inputTo.matches(patternNumber);
+
+									if (!isNumber) {
+										JOptionPane.showMessageDialog(contentPane, "Giá trị phải là số");
 										textFieldFrom.requestFocus();
+										textFieldFrom.selectAll();
+
+									} else if (!isNumber2) {
+										JOptionPane.showMessageDialog(contentPane, "Giá trị phải là số");
+										textFieldTo.requestFocus();
+										textFieldTo.selectAll();
+
+									} else {
+										if (Integer.parseInt(textFieldFrom.getText().replaceAll(",", "")) > Integer
+												.parseInt(textFieldTo.getText().replaceAll(",", ""))) {
+											JOptionPane.showMessageDialog(contentPane, "Khoảng giá không hợp lê!");
+											textFieldFrom.requestFocus();
+										} else {
+
+											hienthisanpham("timkiemtheogia");
+										}
 									}
-									else {
-										
-										hienthisanpham("timkiemtheogia");
-									}
+
 								}
-									
-								}
-							}else {
+							} else {
 								hienthisanpham("timkiemtheoid");
 							}
-							
 
 						} else {
 							JOptionPane.showMessageDialog(contentPane, "Không tìm thấy sản phẩm!");

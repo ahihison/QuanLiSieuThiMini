@@ -17,6 +17,17 @@ public class SanPhamDAL extends connectSql {
 		// TODO Auto-generated constructor stub
 	}
 
+	public int getLastMaSP() throws SQLException {
+		String sql = "select top 1 MaSP from SANPHAM order by MaSP DESC";
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		ResultSet rs = pstm.executeQuery();
+		  if (rs.next()) {
+		        int maxColumnValue = rs.getInt("MaSP");
+		        return maxColumnValue;
+		    }
+		  closeConnection();
+		  return 0;
+	}
 	public ArrayList<SanPham> docSanPham(String condition, String value) {
 		String sql = "";
 		String part2="";
@@ -171,6 +182,16 @@ public class SanPhamDAL extends connectSql {
 		}
 	}
 
+	public String getNameSanPham(int maSP) throws SQLException {
+		String sql = "select TenSP from SANPHAM where MaSP = "+ maSP;
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		ResultSet rs = pstm.executeQuery();
+		if (rs.next()) {
+		    String tenSP = rs.getString("TenSP");
+		    return tenSP;
+		}
+		return "";
+	}
 	public static void main(String[] args) throws SQLException {
 		SanPhamDAL sp = new SanPhamDAL();
 		SanPham spthem = new SanPham();
