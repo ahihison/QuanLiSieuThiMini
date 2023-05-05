@@ -47,7 +47,7 @@ public class LoaiHangDAL extends connectSql {
 		return "";
 	}
 	public int getLastMaLH() throws SQLException {
-		String sql = "SELECT TOP1 ('LOAIHANG') AS MaLH";
+		String sql = "select top 1 MaLH from LOAIHANG order by MaLH DESC";
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		ResultSet rs = pstm.executeQuery();
 		  if (rs.next()) {

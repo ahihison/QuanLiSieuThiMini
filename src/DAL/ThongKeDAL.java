@@ -100,6 +100,58 @@ public class ThongKeDAL extends connectSql {
 		}
 		return arr;
 	}
+	public int getTongChiPhi(String dateFrom,String dateTo,int malh) throws SQLException {
+		String sql ="";
+		if(malh==0) {
+			
+			sql = "{call SP_TongChiPhi(?,?)}";
+		}
+		else if(malh!=0) {
+			
+			sql ="{call SP_TongChiPhiTheoLoai(?,?,?)}";
+		}
+		
+		CallableStatement cstmt = conn.prepareCall(sql);
+		
+		cstmt.setString(1, dateFrom);
+		cstmt.setString(2, dateTo);
+			if(malh!=0) {
+			
+			cstmt.setInt(3, malh);
+			}
+		ResultSet rs = cstmt.executeQuery();
+		if(rs.next()) {
+			return rs.getInt("TongChiPhi");
+		}
+		
+		return -1;
+	}
+	public int getTongDoanhThu(String dateFrom,String dateTo,int malh) throws SQLException {
+		String sql ="";
+		if(malh==0) {
+			
+			sql = "{call SP_TongDoanhThu(?,?)}";
+		}
+		else if(malh!=0) {
+			
+			sql ="{call SP_TongDoanhThuTheoLoai(?,?,?)}";
+		}
+		
+		CallableStatement cstmt = conn.prepareCall(sql);
+		
+		cstmt.setString(1, dateFrom);
+		cstmt.setString(2, dateTo);
+			if(malh!=0) {
+			
+			cstmt.setInt(3, malh);
+			}
+		ResultSet rs = cstmt.executeQuery();
+		if(rs.next()) {
+			return rs.getInt("Doanhthu");
+		}
+		
+		return -1;
+	}
 	public ArrayList<DoanhThu> doanhThu(String dateFrom,String dateTo,String maLh) throws SQLException{
 		 String sql ="";
 		 ArrayList<DoanhThu> arr = new ArrayList<DoanhThu>();
@@ -134,7 +186,7 @@ public class ThongKeDAL extends connectSql {
 	}
 	public static void main(String[] args) throws SQLException {
 		ThongKeDAL tkd = new ThongKeDAL();
-		System.out.println(tkd.readTableOutPut("readall"));
+		System.out.println(tkd.getTongDoanhThu("2018-01-01", "2020-05-05",0));
 		
 	}
 

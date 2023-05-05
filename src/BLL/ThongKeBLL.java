@@ -49,9 +49,25 @@ public class ThongKeBLL {
 		return arr;
 		
 	}
+	public int getTongChiPhi(String dateFrom,String dateTo,String malh) throws SQLException {
+		ThongKeDAL tkd = new ThongKeDAL();
+		
+			return tkd.getTongChiPhi(dateFrom, dateTo, Integer.parseInt(malh));
+			
+	
+	
+	}
+	public int getTongDoanhThu(String dateFrom,String dateTo,String malh) throws SQLException {
+		ThongKeDAL tkd = new ThongKeDAL();
+		
+			return tkd.getTongDoanhThu(dateFrom, dateTo, Integer.parseInt(malh));
+			
+	
+	
+	}
 	public static void main(String[] args) throws SQLException {
 		ThongKeBLL tkbll = new ThongKeBLL();
-		System.out.println(tkbll.renderTableOutput("1"));
+		System.out.println(tkbll.getTongChiPhi("2018-01-01", "2020-05-05","0"));
 	}
 
 }

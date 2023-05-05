@@ -5,13 +5,19 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import BLL.DangNhapBLL;
+import DTO.NhanVien;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.FlowLayout;
@@ -28,17 +34,21 @@ import java.awt.Component;
 public class LoginGui extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
+	
+
 
 	/**
 	 * Launch the application.
 	 */
+	JTextField textField_1 = new JTextField();
+	JTextField textField = new JTextField();
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					LoginGui frame = new LoginGui();
+					// Set the location of the frame to the center of the screen
+					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -83,7 +93,7 @@ public class LoginGui extends JFrame {
 					.addGap(4))
 		);
 		
-		textField = new JTextField();
+		
 		textField.setColumns(10);
 		
 		JLabel lblNewLabel_1 = new JLabel("Tên Đăng Nhập:");
@@ -93,7 +103,7 @@ public class LoginGui extends JFrame {
 //		new ImageIcon("QuanLiSieuThiMini\\src\\GUI\\Image\\User.png")
 		lblNewLabel_2.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\User.png"))));
 		
-		textField_1 = new JTextField();
+
 		textField_1.setColumns(10);
 		
 		JLabel lblNewLabel_3 = new JLabel("Mật Khẩu :");
@@ -113,6 +123,41 @@ public class LoginGui extends JFrame {
 		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 13));
 		
 		JButton btnNewButton_1 = new JButton("Đăng Nhập");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DangNhapBLL dn = new DangNhapBLL();
+				NhanVien nv = new NhanVien();
+				try {
+					nv = dn.checkLogin(textField.getText(), textField_1.getText());
+					if(nv.getChucVu()==1 &&nv.getHoTen().equals("Mật khẩu không chính sát, vui lòng kiểm tra lại!")==false &&nv.getHoTen().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
+						 HomeAdmin admin=new HomeAdmin();
+			             setVisible(false);
+			          
+			             admin.setVisible(true);
+						admin.setLocationRelativeTo(null);
+					}
+					else if(nv.getChucVu()!=1 &&nv.getHoTen().equals("Mật khẩu không chính sát, vui lòng kiểm tra lại!")==false &&nv.getHoTen().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
+					
+						HomeNhanVien hnv = new HomeNhanVien();
+						setVisible(false);
+						hnv.setVisible(true);
+						hnv.setLocationRelativeTo(null);
+					}
+					else {
+						JOptionPane.showMessageDialog(contentPane,nv.getHoTen());
+							
+					};
+					
+					
+					
+					
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+		});
 		btnNewButton_1.setHorizontalAlignment(SwingConstants.LEFT);
 		btnNewButton_1.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Login.png"))));
 		btnNewButton_1.setFont(new Font("Arial", Font.PLAIN, 13));
