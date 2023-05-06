@@ -41,12 +41,15 @@ import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale.Category;
+import java.util.Map;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Random;
 import java.awt.event.ActionEvent;
@@ -87,6 +90,20 @@ import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.data.JRTableModelDataSource;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
 public class ThongKeGui extends JFrame {
 
 	private JPanel contentPane;
@@ -120,7 +137,6 @@ public class ThongKeGui extends JFrame {
 	 * Create the frame.
 	 * @throws SQLException 
 	 */
-	
 	
 	public void showTableInput(String condition) throws SQLException {
 		String[] columnNames = { "Mã Phiếu Nhập", "Mã Sản Phẩm", "Số Lượng", "Ngày Nhập" };
@@ -412,7 +428,7 @@ public class ThongKeGui extends JFrame {
 		btnNewButton_1_1.setIcon(new ImageIcon(ThongKeGui.class.getResource("/GUI/Image/Revenue.png")));
 		btnNewButton_1_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+			
 				try {
 					if(jDateChooser1.getDate()== null || jDateChooser1_1.getDate()==null) {
 						JOptionPane.showMessageDialog(contentPane, "Ngày thống kê trống!");
@@ -442,8 +458,11 @@ public class ThongKeGui extends JFrame {
 		btnNewButton_1_2.setEnabled(false);
 		btnNewButton_1_2.setFont(new Font("Arial", Font.BOLD, 12));
 		btnNewButton_1_2.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
 				
+
+
 				ThongKeBLL tkbll = new ThongKeBLL();
 				ArrayList<DoanhThu> arr = new ArrayList<DoanhThu>();
 				java.util.Date dateFromUtil = jDateChooser1.getDate();

@@ -131,7 +131,7 @@ public class QuanLyKhachHang extends JFrame {
 	JLabel lbThongbao = new JLabel();
 	String oldMaSP = null;
 	private JTextField textFieldSearch;
-boolean checkFix = false;
+        boolean checkFix = false;
 
 	public void hienthikhachhang(String condition) throws SQLException {
 		KhachHangDAL khDal = new KhachHangDAL();
@@ -400,7 +400,7 @@ boolean checkFix = false;
                 btg2.add(radioNam);
                 btg2.add(radioNu);
                 
-		JLabel lblNewLabel_8 = new JLabel("Điện thoại");
+		JLabel lblNewLabel_8 = new JLabel("Điểm thưởng");
 		lblNewLabel_8.setBounds(650, 48, 87, 25);
 
 		textFieldDiemthuong = new JTextField();
@@ -815,7 +815,7 @@ boolean checkFix = false;
 
 		panel_5.add(lblNewLabel_8);
 		panel_5.add(lblNewLabel_9);
-		panel_5.add(textFieldDiachi);
+		panel_5.add(textFieldDiemthuong);
 		panel_5.add(textFieldNgaycapthe);
                 panel_5.add(lblNewLabel_10);
                 panel_5.add(textFieldDiachi);

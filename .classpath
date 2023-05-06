@@ -58,5 +58,10 @@
 	<classpathentry kind="lib" path="C:/Users/sonnguyen/eclipse-workspace/QuanLiSieuThiMini/lib/apache-log4j-2.20.0-bin/log4j-to-slf4j-2.20.0-sources.jar"/>
 	<classpathentry kind="lib" path="C:/Users/sonnguyen/eclipse-workspace/QuanLiSieuThiMini/lib/poi-bin-5.2.3/ooxml-lib/commons-compress-1.21.jar"/>
 	<classpathentry kind="lib" path="C:/Users/sonnguyen/eclipse-workspace/QuanLiSieuThiMini/lib/jexcelapi/jxl.jar"/>
+	<classpathentry kind="lib" path="C:/Users/sonnguyen/eclipse-workspace/QuanLiSieuThiMini/lib/jasperreports-6.20.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/sonnguyen/eclipse-workspace/QuanLiSieuThiMini/lib/commons-logging-1.2/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/sonnguyen/eclipse-workspace/QuanLiSieuThiMini/lib/commons-logging-1.2/commons-logging-1.2-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/sonnguyen/eclipse-workspace/QuanLiSieuThiMini/lib/commons-digester3-3.2/commons-digester3-3.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/sonnguyen/Desktop/docs/com-jaspersoft-ireport-jasperserver.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
