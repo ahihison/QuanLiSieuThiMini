@@ -59,7 +59,33 @@ public class LoginGui extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws SQLException 
 	 */
+	public NhanVien getNv() throws SQLException {
+		DangNhapBLL dn = new DangNhapBLL();
+		NhanVien nv = new NhanVien();
+		
+			nv = dn.checkLogin(textField.getText(), textField_1.getText());
+			if(nv.getChucVu()==1 &&nv.getHoTen().equals("Mật khẩu không chính sát, vui lòng kiểm tra lại!")==false &&nv.getHoTen().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
+				 HomeAdmin admin=new HomeAdmin();
+	             setVisible(false);
+	             
+	             admin.setVisible(true);
+				admin.setLocationRelativeTo(null);
+			}
+			else if(nv.getChucVu()!=1 &&nv.getHoTen().equals("Mật khẩu không chính sát, vui lòng kiểm tra lại!")==false &&nv.getHoTen().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
+			
+				HomeNhanVien hnv = new HomeNhanVien();
+				setVisible(false);
+				hnv.setVisible(true);
+				hnv.setLocationRelativeTo(null);
+			}
+			else {
+				JOptionPane.showMessageDialog(contentPane,nv.getHoTen());
+					
+			
+			}
+			return nv;};
 	public LoginGui() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 509, 306);
@@ -128,11 +154,13 @@ public class LoginGui extends JFrame {
 				DangNhapBLL dn = new DangNhapBLL();
 				NhanVien nv = new NhanVien();
 				try {
+					
 					nv = dn.checkLogin(textField.getText(), textField_1.getText());
+					
 					if(nv.getChucVu()==1 &&nv.getHoTen().equals("Mật khẩu không chính sát, vui lòng kiểm tra lại!")==false &&nv.getHoTen().equals("Tài Khoản không tồn tại, vui lòng kiểm tra lại!")==false) {
 						 HomeAdmin admin=new HomeAdmin();
 			             setVisible(false);
-			          
+			             
 			             admin.setVisible(true);
 						admin.setLocationRelativeTo(null);
 					}
@@ -140,6 +168,8 @@ public class LoginGui extends JFrame {
 					
 						HomeNhanVien hnv = new HomeNhanVien();
 						setVisible(false);
+						ShareDAta.nhanVien = nv;
+					
 						hnv.setVisible(true);
 						hnv.setLocationRelativeTo(null);
 					}
@@ -168,6 +198,15 @@ public class LoginGui extends JFrame {
 		btnNewButton_2.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(LoginGui.class.getResource(".\\Image\\Exit mini.png"))));
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				 int lick=JOptionPane.showConfirmDialog(null,"Bạn Có Muốn Thoát Khỏi Chương Trình Hay Không?","Thông Báo",2);
+			        if(lick==JOptionPane.OK_OPTION){
+			            System.exit(0);
+			        }
+			        else{
+			            if(lick==JOptionPane.CANCEL_OPTION){    
+			               setVisible(true);
+			            }
+			        }
 			}
 		});
 		GroupLayout gl_panel_1 = new GroupLayout(panel_1);

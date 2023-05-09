@@ -70,6 +70,7 @@ import javax.swing.table.TableColumn;
 import BLL.SanPhamBLL;
 import DTO.LoaiHang;
 import DTO.NhaCungCap;
+import DTO.NhanVien;
 import DTO.SanPham;
 import DAL.LoaiHangDAL;
 import DAL.NhaCungCapDAL;
@@ -104,12 +105,16 @@ public class QuanLySanPhamGui extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	
+	NhanVien nhanVien = ShareDAta.nhanVien;
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					QuanLySanPhamGui frame = new QuanLySanPhamGui();
 					frame.setVisible(true);
+					
+					
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -142,7 +147,7 @@ public class QuanLySanPhamGui extends JFrame {
 	JScrollPane scrollPane = new JScrollPane();
 	boolean addbtn, fixbtn = false;
 	JComboBox comboBoxSearch = new JComboBox();
-	int rsRenderType = -1;
+	int rsRenderType = 0;
 	JTextField textFieldSearch = new JTextField();
 	JTextField textFieldTo = new JTextField();
 	JTextField textFieldFrom = new JTextField();
@@ -203,6 +208,7 @@ public class QuanLySanPhamGui extends JFrame {
 	}
 
 	public void hienthisanpham(String condition) throws SQLException {
+		
 
 		SanPhamDAL spDal = new SanPhamDAL();
 		ArrayList<SanPham> arrSp = new ArrayList<SanPham>();
@@ -250,12 +256,62 @@ public class QuanLySanPhamGui extends JFrame {
 			}
 
 		}
+		if (condition == "suatheogia") {
+			if (rsRenderType > 0) {
+
+				arrSp = spbll.searchProductById(textFieldSearch.getText(), rsRenderType + "");
+				LoaiHangDAL test = new LoaiHangDAL();
+				ArrayList<LoaiHang> arrMaLH = test.docLoaiHang();
+				DefaultComboBoxModel combo = new DefaultComboBoxModel();
+				comboBox.setModel(combo);
+				for (LoaiHang malh : arrMaLH) {
+					combo.addElement(malh.getTenLH());
+
+				}
+			} else {
+
+				arrSp = spDal.docSanPham("docsanpham", null);
+				LoaiHangDAL test = new LoaiHangDAL();
+				ArrayList<LoaiHang> arrMaLH = test.docLoaiHang();
+				DefaultComboBoxModel combo = new DefaultComboBoxModel();
+				comboBox.setModel(combo);
+				for (LoaiHang malh : arrMaLH) {
+					combo.addElement(malh.getTenLH());
+
+				}
+			}
+
+		}
 		if (condition == "timkiemtheogia") {
 
 			String priceFrom = textFieldFrom.getText().replaceAll(",", "");
 			String priceTo = textFieldTo.getText().replaceAll(",", "");
 			arrSp = spbll.searchProductByPrice(textFieldSearch.getText(),
 					rsRenderType + "" + "," + priceFrom + "," + priceTo);
+//			if (rsRenderType > 0) {
+//
+//				arrSp = spbll.searchProductById(textFieldSearch.getText(), rsRenderType + "");
+//				LoaiHangDAL test = new LoaiHangDAL();
+//				ArrayList<LoaiHang> arrMaLH = test.docLoaiHang();
+//				DefaultComboBoxModel combo = new DefaultComboBoxModel();
+//				comboBox.setModel(combo);
+//				for (LoaiHang malh : arrMaLH) {
+//					combo.addElement(malh.getTenLH());
+//
+//				}
+//			} else {
+//
+//				arrSp = spDal.docSanPham("docsanpham", null);
+//				LoaiHangDAL test = new LoaiHangDAL();
+//				ArrayList<LoaiHang> arrMaLH = test.docLoaiHang();
+//				DefaultComboBoxModel combo = new DefaultComboBoxModel();
+//				comboBox.setModel(combo);
+//				for (LoaiHang malh : arrMaLH) {
+//					combo.addElement(malh.getTenLH());
+//
+//				}
+//			}
+
 		}
 		if (condition == "them") {
 			arrSp = spDal.docSanPham("docsanpham", null);
@@ -614,6 +670,7 @@ public class QuanLySanPhamGui extends JFrame {
 
 	public QuanLySanPhamGui() throws SQLException {
 
+		
 		tabbedPane.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
@@ -721,6 +778,7 @@ public class QuanLySanPhamGui extends JFrame {
 
 		textFieldImg = new JTextField();
 		textFieldImg.setEnabled(false);
+		textFieldImg.setEditable(false);
 		textFieldImg.setColumns(10);
 
 		JLabel lblNewLabel_1 = new JLabel("Mã sản phẩm");
@@ -756,19 +814,22 @@ public class QuanLySanPhamGui extends JFrame {
 			}
 
 			private void formatInput() {
-				String input = textFieldGianhap.getText().replaceAll(",", "");
-				if (input.isEmpty()) {
-					return;
-				}
-				try {
-					int number = Integer.parseInt(input);
-					NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
-					String formattedNumber = numberFormat.format(number);
-					textFieldGianhap.setText(formattedNumber);
-				} catch (NumberFormatException ex) {
-					// Ignore invalid input
-				}
+			    String input = textFieldGianhap.getText().replaceAll("[\\p{Punct}\\s]", "");
+
+			    if (input.isEmpty()) {
+			        return;
+			    }
+
+			    try {
+			        long number = Long.parseLong(input);
+			        NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
+			        String formattedNumber = numberFormat.format(number);
+			        textFieldGianhap.setText(formattedNumber);
+			    } catch (NumberFormatException ex) {
+			        // Ignore invalid input
+			    }
 			}
+
 		});
 
 		JLabel lblNewLabel_6 = new JLabel("Loại sản phẩm");
@@ -997,10 +1058,11 @@ public class QuanLySanPhamGui extends JFrame {
 
 				try {
 					String valueSelect = comboBox.getSelectedItem().toString();
-					if (textFieldFrom.getText().isEmpty()) {
+					if (textFieldFrom.getText().isEmpty()&&textFieldFrom.getText().isEmpty()) {
 						hienthisanpham("suatheoid");
+						
 					} else if (textFieldFrom.getText().isEmpty() == false) {
-						hienthisanpham("timkiemtheogia");
+						hienthisanpham("suatheogia");
 					}
 
 					comboBox.setSelectedItem(valueSelect);
@@ -1300,6 +1362,7 @@ public class QuanLySanPhamGui extends JFrame {
 		comboBoxSearch.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
+				btg.clearSelection();
 				textFieldFrom.setText("");
 				textFieldTo.setText("");
 				textFieldSearch.setText("");
@@ -1332,7 +1395,8 @@ public class QuanLySanPhamGui extends JFrame {
 			}
 
 			private void formatInput() {
-				String input = textFieldFrom.getText().replaceAll(",", "");
+				String input = textFieldFrom.getText().replaceAll("[\\p{Punct}\\s]", "");
+				
 				if (input.isEmpty()) {
 					return;
 				}
@@ -1354,7 +1418,8 @@ public class QuanLySanPhamGui extends JFrame {
 			}
 
 			private void formatInput() {
-				String input = textFieldTo.getText().replaceAll(",", "");
+				String input = textFieldTo.getText().replaceAll("[\\p{Punct}\\s]", "");
+				
 				if (input.isEmpty()) {
 					return;
 				}
@@ -1382,6 +1447,8 @@ public class QuanLySanPhamGui extends JFrame {
 		JButton btnTimKiem = new JButton("Tìm Kiếm");
 		btnTimKiem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+			
+				btg.clearSelection();
 				if (textFieldSearch.getText().isEmpty()) {
 
 					JOptionPane.showMessageDialog(contentPane, "Nội dung tìm kiếm trống!");
@@ -1403,8 +1470,10 @@ public class QuanLySanPhamGui extends JFrame {
 									JOptionPane.showMessageDialog(contentPane, "Khoảng giá cần tìm trống!");
 									textFieldTo.requestFocus();
 								} else {
-									String inputFrom = textFieldFrom.getText().replaceAll(",", "");
-									String inputTo = textFieldTo.getText().replaceAll(",", "");
+									String inputFrom = textFieldFrom.getText().replaceAll("[\\p{Punct}\\s]", "");
+									
+									
+									String inputTo = textFieldTo.getText().replaceAll("[\\p{Punct}\\s]", "");
 									isNumber = inputFrom.matches(patternNumber);
 									boolean isNumber2 = inputTo.matches(patternNumber);
 

@@ -17,6 +17,9 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.Color;
 import javax.swing.SwingConstants;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 /**
  *
@@ -29,6 +32,7 @@ public class HomeAdmin extends javax.swing.JFrame {
      */
     public HomeAdmin() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -40,21 +44,22 @@ public class HomeAdmin extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
-
+        
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
-        jButton1.setBounds(70, 173, 162, 147);
+        jButton1.setBounds(41, 173, 162, 147);
         jButton2 = new javax.swing.JButton();
-        jButton2.setBounds(313, 173, 159, 147);
+        jButton2.setBounds(288, 173, 159, 147);
         jButton3 = new javax.swing.JButton();
-        jButton3.setBounds(560, 173, 149, 147);
+        jButton3.setBounds(743, 173, 149, 147);
         jButton4 = new javax.swing.JButton();
-        jButton4.setBounds(792, 173, 168, 147);
+        jButton4.setBounds(952, 173, 168, 147);
         jLabel3 = new javax.swing.JLabel();
         jLabel3.setBounds(10, 536, 1067, 30);
         jLabel3.setHorizontalAlignment(SwingConstants.CENTER);
         jLabel3.setForeground(new Color(0, 255, 0));
-
+        setResizable(false);
+      
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setMaximumSize(new java.awt.Dimension(30000, 30000));
@@ -127,10 +132,10 @@ public class HomeAdmin extends javax.swing.JFrame {
         		.addComponent(jPanel1, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 1130, Short.MAX_VALUE)
         );
         groupLayout.setVerticalGroup(
-        	groupLayout.createParallelGroup(Alignment.TRAILING)
-        		.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+        	groupLayout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(groupLayout.createSequentialGroup()
         			.addContainerGap()
-        			.addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, 622, GroupLayout.PREFERRED_SIZE))
+        			.addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, 622, Short.MAX_VALUE))
         );
         
         lblNewLabel = new JLabel("PHẦN MỀM QUẢN LÍ SIÊU THỊ MINI");
@@ -138,12 +143,41 @@ public class HomeAdmin extends javax.swing.JFrame {
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
         lblNewLabel.setForeground(new Color(0, 255, 0));
         lblNewLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        
-        lblNewLabel_1 = new JLabel("");
-        lblNewLabel_1.setBounds(0, 0, 1130, 623);
         ImageIcon icon1 = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
                 HomeAdmin.class.getResource("/GUI/Image/Background2.png")).getScaledInstance(1250, 1300, Image.SCALE_SMOOTH));
-        lblNewLabel_1.setIcon(icon1);
+        
+        btnNhpHng = new JButton();
+        btnNhpHng.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		 NhapHangGUI thongke;
+				try {
+					thongke = new NhapHangGUI();
+					setVisible(false);
+		              
+	                 thongke.setVisible(true);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+                 
+        	}
+        });
+        btnNhpHng.setBounds(533, 173, 159, 147);
+        btnNhpHng.setIcon(new ImageIcon(HomeAdmin.class.getResource("/GUI/Image/Add.png")));
+        btnNhpHng.setVerticalTextPosition(SwingConstants.BOTTOM);
+        btnNhpHng.setVerticalAlignment(SwingConstants.BOTTOM);
+        btnNhpHng.setText("NHẬP HÀNG");
+        btnNhpHng.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnNhpHng.setFont(new Font("Tahoma", Font.BOLD, 14));
+        
+        JLabel lblNewLabel_1 = new JLabel("");
+        lblNewLabel_1.setBounds(0, 0, 1130, 612);
+        icon = new ImageIcon(
+				Toolkit.getDefaultToolkit().createImage(HomeAdmin.class.getResource(".//Image//Background2.png")));
+		Image image2 = icon.getImage();
+		Image resizedImg2 = image2.getScaledInstance(2000, 1000, Image.SCALE_SMOOTH);
+		ImageIcon resizedIcon2 = new ImageIcon(resizedImg2);
+		 lblNewLabel_1.setIcon(resizedIcon2);
         jPanel1.setLayout(null);
         jPanel1.add(jLabel3);
         jPanel1.add(jButton1);
@@ -151,6 +185,7 @@ public class HomeAdmin extends javax.swing.JFrame {
         jPanel1.add(jButton4);
         jPanel1.add(jButton2);
         jPanel1.add(jButton3);
+        jPanel1.add(btnNhpHng);
         jPanel1.add(lblNewLabel_1);
         getContentPane().setLayout(groupLayout);
 
@@ -158,7 +193,7 @@ public class HomeAdmin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {//GEN-FIRST:event_jButton1ActionPerformed
-       HoaDon1 hd=new HoaDon1();
+       QuanLyNhanVienGui hd=new QuanLyNhanVienGui();
        this.setVisible(false);
        hd.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -243,6 +278,5 @@ public class HomeAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private JLabel lblNewLabel;
-    private JLabel lblNewLabel_1;
-    // End of variables declaration//GEN-END:variables
+    private JButton btnNhpHng;
 }

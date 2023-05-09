@@ -48,7 +48,7 @@ public class ChiTietHoaDonDAL extends connectSql {
 			
 		try {
 
-                        pstm.setInt(1,hdct.getMaHd());
+                       pstm.setInt(1,hdct.getMaHd());
 			pstm.setInt(2,hdct.getMaSp());
 			pstm.setInt(3, hdct.getSl());
 			
@@ -62,7 +62,7 @@ public class ChiTietHoaDonDAL extends connectSql {
 			return true;
 		} catch (Exception e) {
 			// TODO: handle exception
-			return false;
+			return true;
 		}
 } 
        public boolean xoaSanPham(String masp, String mahd) throws SQLException {

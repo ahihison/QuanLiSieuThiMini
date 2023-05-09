@@ -891,6 +891,19 @@ public class QuanLyNhanVienGui extends JFrame {
 
         //btnTimKiem.setBounds(660, 100, 130, 25);
         panel_5.add(btnTimKiem);
+        
+        JButton btnNewButton = new JButton("Hệ Thống");
+        btnNewButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		 HomeAdmin home=new HomeAdmin();
+                 setVisible(false);
+              
+                 home.setVisible(true);
+                 home.setLocationRelativeTo(null);
+        	}
+        });
+        btnNewButton.setBounds(938, 153, 119, 39);
+        panel_5.add(btnNewButton);
         panel_2.add(panel_6);
         panel_2.add(panel_8);
 

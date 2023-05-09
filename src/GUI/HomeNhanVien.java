@@ -9,15 +9,26 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import DTO.NhanVien;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import java.awt.Font;
+import javax.swing.SwingConstants;
+import java.awt.Dimension;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 /**
  *
  * @author TruongHo
  */
 public class HomeNhanVien extends javax.swing.JFrame {
-
+	
     /**
      * Creates new form HomeNhanVien
      */
+	NhanVien nhanVien = ShareDAta.nhanVien;
+
     public HomeNhanVien() {
         initComponents();
     }
@@ -102,19 +113,46 @@ public class HomeNhanVien extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         jLabel3.setText("Siêu Thị MiNi : đường 3/2, P. Xuân Khánh, Q. Ninh Kiều, TP. Cần Thơ. Điện thoại: 0876756567; Email: Cuahangtienloi@gmail.com");
+        
+        btnNhnVin = new JButton();
+        btnNhnVin.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		QuanLyKhachHang sanpham;
+				try {
+					sanpham = new QuanLyKhachHang();
+					setVisible(false);
+		             
+	                sanpham.setVisible(true);
+	                sanpham.setLocationRelativeTo(null);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+                
+        	}
+        });
+        btnNhnVin.setIcon(new ImageIcon(HomeNhanVien.class.getResource("/GUI/Image/Account.png")));
+        btnNhnVin.setVerticalTextPosition(SwingConstants.BOTTOM);
+        btnNhnVin.setVerticalAlignment(SwingConstants.BOTTOM);
+        btnNhnVin.setText("KHÁCH HÀNG");
+        btnNhnVin.setPreferredSize(new Dimension(134, 107));
+        btnNhnVin.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnNhnVin.setFont(new Font("Tahoma", Font.BOLD, 14));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1Layout.setHorizontalGroup(
         	jPanel1Layout.createParallelGroup(Alignment.LEADING)
         		.addGroup(jPanel1Layout.createSequentialGroup()
-        			.addGap(70)
-        			.addComponent(jButton1, GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
-        			.addGap(81)
-        			.addComponent(jButton2, GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
-        			.addGap(88)
-        			.addComponent(jButton3, GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
-        			.addGap(83)
-        			.addComponent(jButton4, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
+        			.addGap(22)
+        			.addComponent(jButton1, GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+        			.addGap(42)
+        			.addComponent(btnNhnVin, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
+        			.addGap(40)
+        			.addComponent(jButton2, GroupLayout.PREFERRED_SIZE, 157, GroupLayout.PREFERRED_SIZE)
+        			.addGap(61)
+        			.addComponent(jButton3, GroupLayout.PREFERRED_SIZE, 142, GroupLayout.PREFERRED_SIZE)
+        			.addGap(56)
+        			.addComponent(jButton4, GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
         			.addGap(140))
         		.addGroup(jPanel1Layout.createSequentialGroup()
         			.addContainerGap()
@@ -127,17 +165,18 @@ public class HomeNhanVien extends javax.swing.JFrame {
         			.addGap(173)
         			.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
         				.addComponent(jButton4, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE)
-        				.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING, false)
+        				.addComponent(jButton1, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(btnNhnVin, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE)
+        				.addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE)
         					.addComponent(jButton2, GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
-        					.addComponent(jButton3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        				.addComponent(jButton1, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE))
+        					.addComponent(jButton3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         			.addPreferredGap(ComponentPlacement.RELATED, 216, Short.MAX_VALUE)
         			.addComponent(jLabel3, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
         			.addGap(16))
         );
         jPanel1.setLayout(jPanel1Layout);
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(".\\Image\\shop.png")); // NOI18N
+        jLabel2.setIcon(new ImageIcon(HomeNhanVien.class.getResource("/GUI/Image/anhnenn.png"))); // NOI18N
         jLabel2.setMaximumSize(new java.awt.Dimension(3500, 2808));
         jLabel2.setMinimumSize(new java.awt.Dimension(3500, 2808));
         GroupLayout groupLayout = new GroupLayout(getContentPane());
@@ -238,7 +277,7 @@ public class HomeNhanVien extends javax.swing.JFrame {
             }
         });
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -247,5 +286,6 @@ public class HomeNhanVien extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private JButton btnNhnVin;
     // End of variables declaration//GEN-END:variables
 }

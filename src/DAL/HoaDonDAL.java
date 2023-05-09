@@ -2,6 +2,7 @@
  
 package DAL;
 import java.beans.Statement;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -151,7 +152,39 @@ try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
     }
 }
 }
+ public int getTongKho(int masp) throws SQLException {
+	 String sql = "{ call tongkhoa(?) }"; // Modify the SQL statement to use the correct number of parameters
+		
+		
+	    CallableStatement cstmt = conn.prepareCall(sql);
+	    cstmt.setInt(1,masp);
+	    ResultSet rs = cstmt.executeQuery();
+	while(rs.next()) {
+		return rs.getInt("SoLuongHang");
+	}
+	return 1;
+ }
+ public int getTongBan(int masp) throws SQLException {
+	 String sql = "{ call tongban(?) }"; // Modify the SQL statement to use the correct number of parameters
+		
+		
+	    CallableStatement cstmt = conn.prepareCall(sql);
+	    cstmt.setInt(1,masp);
+	    ResultSet rs = cstmt.executeQuery();
+	while(rs.next()) {
+		return rs.getInt("SoLuongHang");
+	}
+	return 1;
+ }
+ public int getSoLuongTonKho(int masp) throws SQLException {
+	 return getTongKho(masp)-getTongBan(masp);
+ }
+ public static void main(String[] args) throws SQLException {
+	HoaDonDAL hdd = new HoaDonDAL();
+	System.out.println(hdd.getSoLuongTonKho(3));
 }
+}
+
 
 
 
